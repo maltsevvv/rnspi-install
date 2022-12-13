@@ -113,18 +113,19 @@ KERNEL=="input[0-9]*", RUN+="/usr/local/bin/bluetooth-udev"
 EOF
 
 else
-	systemctl stop bt-agent@hci0.service
-	systemctl disable bt-agent@hci0.service
-	systemctl stop pulseaudio.service
-	systemctl disable pulseaudio.service
-	systemctl daemon-reload
-	apt remove -y bluez-tools pulseaudio-module-bluetooth
-	sudo apt autoclean -y && sudo apt autoremove -y
-	rm /etc/udev/rules.d/99-bluetooth-udev.rules
-	rm /usr/local/bin/bluetooth-udev
-	rm /etc/bluetooth/main.conf
-	rm /etc/systemd/system/bthelper@.service.d/override.conf
-	rm /etc/systemd/system/pulseaudio.service
-	rm /etc/pulse/client.conf
+	echo
+#	systemctl stop bt-agent@hci0.service
+#	systemctl disable bt-agent@hci0.service
+#	systemctl stop pulseaudio.service
+#	systemctl disable pulseaudio.service
+#	systemctl daemon-reload
+#	apt remove -y bluez-tools pulseaudio-module-bluetooth
+#	sudo apt autoclean -y && sudo apt autoremove -y
+#	rm /etc/udev/rules.d/99-bluetooth-udev.rules
+#	rm /usr/local/bin/bluetooth-udev
+#	rm /etc/bluetooth/main.conf
+#	rm /etc/systemd/system/bthelper@.service.d/override.conf
+#	rm /etc/systemd/system/pulseaudio.service
+#	rm /etc/pulse/client.conf
 fi
 
