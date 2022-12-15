@@ -101,13 +101,22 @@
 	sudo chmod -R 0777 /home/pi/movies /home/pi/music /home/pi/mults`
 
 
+***Установить usbmount (для автоподключения usb дисков)
+
+	sudo apt install -y usbmount
+	mkdir /home/pi/tmpu && cd /home/pi/tmpu
+	wget https://github.com/nicokaiser/usbmount/releases/download/0.0.24/usbmount_0.0.24_all.deb
+	dpkg -i usbmount_0.0.24_all.deb
+	cd /home/pi && rm -Rf /home/pi/tmpu 
+
+
 ***Установить can-utils python-pip***
 
 	sudo apt install python-pip
 	sudo apt install can-utils  
 	sudo pip install python-can
 
-# Установить ***skin.rnsd.zip*** или ***skin.rnse.zip*** в KODI через "Установить дополнение из zip"
+## Установить ***skin.rnsd.zip*** или ***skin.rnse.zip*** в KODI через "Установить дополнение из zip"
 
 
 
