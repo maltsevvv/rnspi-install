@@ -3,25 +3,21 @@
 ![prototype scheme](https://github.com/maltsevvv/rnspi-install/blob/main/img/rnse.png)
 
 
-## Установка ПО для Audi Navigation Plus RNS-D и RNS-E (RNSPI)
-![prototype scheme](https://github.com/maltsevvv/rnspi-install/blob/main/img/rnsd.png)
-![prototype scheme](https://github.com/maltsevvv/rnspi-install/blob/main/img/rnse.png)
+# Auto Install
 
-
-***Auto Install***
-
-# 1. Записать на sd-карту с образом Raspbian Buster Lite
+***1. Записать на sd-карту с образом Raspbian Buster Lite***
 
 	https://downloads.raspberrypi.org/raspbian/images/raspbian-2019-07-12/
 
-# 2. Cкопировать  на sd-карту в /boot/
+***2. Cкопировать  на sd-карту в /boot/***
 
 	skin.rnsd-main.zip
 	skin.rnse-main.zip
 
-# 3. Вставить SD карту в Raspberry и подключить MCP2515 canbus модуль
+***3. Вставить SD карту в Raspberry и подключить MCP2515 canbus модуль***
 
-# 4. Подключиться к Raspberry, по SSH
+***4. Подключиться к Raspberry, по SSH***
+
 	login: pi
 	password: rpi (или Ваш)
 	
@@ -31,12 +27,13 @@
 	cd rnspi-install-main  
 	sudo sh install.sh  
 
-#### Если используете USB Bluetoothe модуль, то его необходимо подключить вручную. После установки этого скрипта
+
+### Если используете USB Bluetoothe модуль, то его необходимо подключить вручную. После установки этого скрипта
 
 	sudo bluetoothctl  
 	scan on  
 
-находим свой телефон
+***находим свой телефон***
 	pair 5C:10:C5:E0:94:A6 
 	Request PIN code  
 	[agent] Enter PIN code: `1234`  
@@ -44,9 +41,9 @@
 
 
 
-***Manual Install***
+# Manual Install
 
-# edit /boot/config.txt
+***edit /boot/config.txt***
   
 	sudo nano /boot/config.txt
 	
@@ -66,19 +63,21 @@
 	gpu_mem=128
 	start_x=1
 
-
-# UPDATE
+***UPDATE***
 
 	sudo apt update
 	sudo apt upgrade -y
 	
-# INSATALL KODI:	
+***INSATALL KODI***
+
 	sudo apt install -y kodi
 
-# Добавить автозагрузку KODI	
+***Добавить автозагрузку для  KODI***
+	
 	sudo nano /etc/systemd/system/kodi.service
 	
-# Вставить	
+****Вставить****
+
 	[Unit]
 	Description = Kodi Media Center
 	[Service]
@@ -91,35 +90,35 @@
 	[Install]
 	WantedBy = multi-user.target
 
-# Активировать для автозагрузки KODI	
+***Активировать сервич и запустить KODI***
+	
+	sudo systemctl enable kodi.service
 	sudo systemctl start kodi.service
 
-# Запустить KODI	
-	sudo systemctl enable kodi.service`
-
-
 ***Создать каталоги для хранения медиа файлов***
+
 	sudo mkdir /home/pi/movies /home/pi/music /home/pi/mults
 	sudo chmod -R 0777 /home/pi/movies /home/pi/music /home/pi/mults`
 
 
-# INSTALL can-utils python-pip
+***Установить can-utils python-pip***
 
 	sudo apt install python-pip
-	
 	sudo apt install can-utils  
-	
 	sudo pip install python-can
 
-# INSTALL SKIN.RNS-D IN KODI
+# Установить ***skin.rnsd.zip*** или ***skin.rnse.zip*** в KODI через "Установить дополнение из zip"
 
-# Create service.tvtuner to emulate a TV tuner. If not installed in the car
+
+
+## Эмулировать тв-тюнер для RNSD
 
 	sudo nano /etc/systemd/system/tvtuner.service
 
-# Вставить	
+***Вставить***
+
 	[Unit]
-	Description=Emulation tv-tuner 4BO919146B
+	Description=Emulation tv-tuner 4BO919146B for RNSD
 	[Service]
 	Type=simple
 	ExecStart=/usr/bin/python /home/pi/.kodi/addons/skin.rnsd/tvtuner.pyo
@@ -127,19 +126,42 @@
 	[Install]
 	WantedBy=multi-user.target
 
-# Активировать тв-тюнер	
+# Активировать сервис и запустить тв-тюнер
+
+	sudo systemctl enable tvtuner.service
 	sudo systemctl start tvtuner.service
 	
-# Запустить тв-тюнер	
-	sudo systemctl enable tvtuner.service`  
 
-# INSTALL SAMBA (файловый сервер, для копирования по локальной сети)
+
+## Эмулировать тв-тюнер для RNSE
+
+	sudo nano /etc/systemd/system/tvtuner.service
+
+***Вставить***
+
+	[Unit]
+	Description=Emulation tv-tuner for RNSE
+	[Service]
+	Type=simple
+	ExecStart=/usr/bin/python /home/pi/.kodi/addons/skin.rnse/tvtuner.pyo
+	Restart=always
+	[Install]
+	WantedBy=multi-user.target
+
+# Активировать сервис и запустить тв-тюнер
+
+	sudo systemctl enable tvtuner.service
+	sudo systemctl start tvtuner.service
+
+
+
+
+### Устаеовить SAMBA (файловый сервер, для копирования по локальной сети)
 
 	sudo apt install -y samba
-	
 	sudo nano /etc/samba/smb.conf
 	
-# Вставить. В самом конце файла
+***Вставить. В самом конце файла***
 
 	[rns]
 	path = /home/pi/
@@ -151,19 +173,16 @@
 	force user = root
 	guest ok = yes
 
-# Перезапустить сервер. После перезапуска можно попасть на Raspberry с другого ПК \\localhost
+***Перезапустить сервер. После перезапуска можно попасть на Raspberry с другого ПК \\localhost***
 
 	sudo service smbd restart`  
 
 
-*** Подключение canbus2 can1 ***
+### Подключение canbus2 can1
 
 	sudo nano /boot/config.txt`
-
 	# Enable MCP2515 can1
-	
 	cd /boot/overlays
-	
 	wget https://github.com/maltsevvv/rnspi-install/raw/main/img/mcp2515-can1-0.dtbo	
 	dtoverlay=spi1-1cs,cs0_pin=16	
 	dtoverlay=mcp2515,spi1-0,oscillator=8000000,interrupt=12	
