@@ -48,28 +48,22 @@ if [ -e /boot/skin.rnsd-main.zip ] ; then
 	sed -i -e '$i \  <addon optional="true">skin.rnsd</addon>' /usr/share/kodi/system/addon-manifest.xml
 	sed -i 's/lookandfeel.skin" default="true">skin.estuary/lookandfeel.skin">skin.rnsd/' /home/pi/.kodi/userdata/guisettings.xml
 	echo ${GREEN}"SKIN.RNSD INSTALLED BY DEFAULT"${NC}
+	# install tvtuner for rnsd
 	echo
-# install tvtuner for rnsd
-	echo -n ${BWhite}"EMULATE TV-TUNER 4DO919146B FOR RNSD ? yes / no "${NC}
-	read answer
-	if [ "$answer" != "${answer#[Yy]}" ] ;then
-		cat <<'EOF' > /etc/systemd/system/tvtuner.service
+	cp /home/pi/.kodi/addons/skin.rnsd/tvtuner.pyo /usr/local/bin/
+	cat <<'EOF' > /etc/systemd/system/tvtuner.service
 [Unit]
 Description=Emulation tv-tuner 4DO919146B
 [Service]
 Type=simple
-ExecStart=/usr/bin/python /home/pi/.kodi/addons/skin.rnsd/tvtuner.pyo
+ExecStart=/usr/bin/python /usr/local/bin/tvtuner.pyo
 Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
-		systemctl enable tvtuner.service
-		echo ${GREEN}"TV-TUNER FOR RNSD INSTALLED"${NC}
-	else
-		systemctl stop tvtuner.service
-		systemctl disable tvtuner.service
-		rm /etc/systemd/system/tvtuner.service
-	fi
+	systemctl enable tvtuner.service
+	systemctl start tvtuner
+	
 # install skin.rnse
 elif [ -e /boot/skin.rnse-main.zip ] ; then
 	echo ${BWhite}"Install or SKIN.RNSE"${NC}
@@ -80,26 +74,5 @@ elif [ -e /boot/skin.rnse-main.zip ] ; then
 	sed -i -e '$i \  <addon optional="true">skin.rnse</addon>' /usr/share/kodi/system/addon-manifest.xml
 	sed -i 's/lookandfeel.skin" default="true">skin.estuary/lookandfeel.skin">skin.rnse/' /home/pi/.kodi/userdata/guisettings.xml
 	echo ${GREEN}"SKIN.RNSE INSTALLED BY DEFAULT"${NC}
-	echo
-# install tvtuner for rnsd
-	echo -n ${BWhite}"EMULATE TV-TUNER FOR RNSE ? yes / no "${NC}
-	read answer
-	if [ "$answer" != "${answer#[Yy]}" ] ;then
-		cat <<'EOF' > /etc/systemd/system/tvtuner.service
-[Unit]
-Description=Emulation tv-tuner 4DO919146B
-[Service]
-Type=simple
-ExecStart=/usr/bin/python /home/pi/.kodi/addons/skin.rnse/tvtuner.pyo
-Restart=always
-[Install]
-WantedBy=multi-user.target
-EOF
-		systemctl enable tvtuner.service
-		echo ${GREEN}"TV-TUNER FOR RNSE INSTALLED"${NC}
-	else
-		systemctl stop tvtuner.service
-		systemctl disable tvtuner.service
-		rm /etc/systemd/system/tvtuner.service
-	fi
+
 fi

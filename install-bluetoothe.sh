@@ -113,15 +113,9 @@ KERNEL=="input[0-9]*", RUN+="/usr/local/bin/bluetooth-udev"
 EOF
 
 else
-
-	# Disable Bluetooth
-	if grep -Fxq 'dtoverlay=disable-bt' '/boot/config.txt'; then
-		echo ${GREEN}"Invalid Bluetooth"${NC}
-	else
-		cat <<'EOF' >> /boot/config.txt
+	cat <<'EOF' >> /boot/config.txt
 dtoverlay=disable-bt
 EOF
-		echo ${GREEN}"GPU 128MB"${NC}
-	fi
+	echo ${GREEN}"Invalid Bluetooth"${NC}
 fi
 

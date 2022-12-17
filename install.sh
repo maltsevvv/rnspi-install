@@ -57,6 +57,10 @@ echo
 sed -i '/service.xbmc.versioncheck/d' /usr/share/kodi/system/addon-manifest.xml
 echo ${GREEN}"Disable service.xbmc.versioncheck"${NC}
 echo
+# install iptv  #
+apt install -y kodi-pvr-iptvsimple
+echo ${GREEN}"Install pvr-iptvsimple"${NC}
+echo
 #
 echo ${BWhite}"install can-utils"${NC}
 apt install -y can-utils
