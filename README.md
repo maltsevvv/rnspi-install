@@ -122,6 +122,12 @@
 
 ## Эмулировать тв-тюнер для RNSD
 
+***Копируем из папки skin.rnsd в /usr/local/bin/***
+
+	cp /home/pi/.kodi/addons/skin.rnsd/tvtuner.pyo /usr/local/bin/
+
+***Создаем файл для автозапуска***
+
 	sudo nano /etc/systemd/system/tvtuner.service
 
 ***Вставить***
@@ -130,7 +136,7 @@
 	Description=Emulation tv-tuner 4BO919146B for RNSD
 	[Service]
 	Type=simple
-	ExecStart=/usr/bin/python /home/pi/.kodi/addons/skin.rnsd/tvtuner.pyo
+	ExecStart=/usr/bin/python /usr/local/bin/tvtuner.pyo
 	Restart=always
 	[Install]
 	WantedBy=multi-user.target
@@ -142,27 +148,7 @@
 	
 
 
-## Эмулировать тв-тюнер для RNSE
-
-	sudo nano /etc/systemd/system/tvtuner.service
-
-***Вставить***
-
-	[Unit]
-	Description=Emulation tv-tuner for RNSE
-	[Service]
-	Type=simple
-	ExecStart=/usr/bin/python /home/pi/.kodi/addons/skin.rnse/tvtuner.pyo
-	Restart=always
-	[Install]
-	WantedBy=multi-user.target
-
-# Активировать сервис и запустить тв-тюнер
-
-	sudo systemctl enable tvtuner.service
-	sudo systemctl start tvtuner.service
-
-
+## Эмулировать тв-тюнер для RNSE, через интерфейс. После ввода пароля
 
 
 ### Устаеовить SAMBA (файловый сервер, для копирования по локальной сети)
