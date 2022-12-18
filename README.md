@@ -106,7 +106,7 @@
 	sudo apt install -y usbmount
 	mkdir /home/pi/tmpu && cd /home/pi/tmpu
 	wget https://github.com/nicokaiser/usbmount/releases/download/0.0.24/usbmount_0.0.24_all.deb
-	dpkg -i usbmount_0.0.24_all.deb
+	sudo dpkg -i usbmount_0.0.24_all.deb
 	cd /home/pi && rm -Rf /home/pi/tmpu 
 
 
