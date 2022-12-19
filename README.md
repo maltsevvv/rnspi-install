@@ -71,9 +71,7 @@ Install KODI
 
 Upstart KODI
 	
-	sudo nano /etc/systemd/system/kodi.service
-	
-past
+	sudo nano /etc/systemd/system/kodi.service  
 
 	[Unit]
 	Description = Kodi Media Center
