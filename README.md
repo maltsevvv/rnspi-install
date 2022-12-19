@@ -3,15 +3,19 @@
 ![prototype scheme](https://github.com/maltsevvv/rnspi-install/blob/main/img/rnse.png)
 
 
-*Auto Install*
+
+## Auto Install
 
 1. Записать на sd-карту с образом Raspbian Buster Lite
 
 	https://downloads.raspberrypi.org/raspbian/images/raspbian-2019-07-12/
 
-***2. Cкопировать  на sd-карту в /boot/***
+2. Cкопировать  на sd-карту в /boot/
 
 	skin.rnsd-main.zip
+	
+или
+
 	skin.rnse-main.zip
 
 ***3. Вставить SD карту в Raspberry и подключить MCP2515 canbus модуль***
