@@ -6,38 +6,31 @@
 
 ## Auto Install
 
-1. Записать на sd-карту с образом Raspbian Buster Lite
-
+Записать на sd-карту с образом Raspbian Buster Lite
 	https://downloads.raspberrypi.org/raspbian/images/raspbian-2019-07-12/
 
-2. Cкопировать  на sd-карту в /boot/
+Cкопировать  на sd-карту в /boot/
+	`skin.rnsd-main.zip` или `skin.rnse-main.zip`
 
-	skin.rnsd-main.zip
-	
-или
+Вставить SD карту в Raspberry и подключить MCP2515 canbus модуль
 
-	skin.rnse-main.zip
+Подключиться к Raspberry, по SSH
+`login: pi`  
+`password: rpi` (или Ваш. Ввод пароля не отображается)
 
-***3. Вставить SD карту в Raspberry и подключить MCP2515 canbus модуль***
-
-***4. Подключиться к Raspberry, по SSH***
-
-	login: pi
-	password: rpi (или Ваш)
-	
-	cd /tmp  
-	wget -q https://github.com/maltsevvv/rnspi-install/archive/main.zip  
-	unzip main.zip  
-	cd rnspi-install-main  
-	sudo sh install.sh  
+	cd /tmp
+	wget -q https://github.com/maltsevvv/rnspi-install/archive/main.zip
+	unzip main.zip
+	cd rnspi-install-main
+	sudo sh install.sh
 
 
-### Если используете USB Bluetoothe модуль, то его необходимо подключить вручную. После установки этого скрипта
+*Если используете USB Bluetoothe модуль, то его необходимо подключать вручную. После установки этого скрипта*
 
-	sudo bluetoothctl  
-	scan on  
+	sudo bluetoothctl
+	scan on
 
-***находим свой телефон***
+*Находим свой телефон*
 	pair 5C:10:C5:E0:94:A6 
 	Request PIN code  
 	[agent] Enter PIN code: `1234`  
@@ -45,9 +38,9 @@
 
 
 
-# Manual Install
+##Manual Install
 
-***edit /boot/config.txt***
+Редактируем /boot/config.txt
   
 	sudo nano /boot/config.txt
 	
