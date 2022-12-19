@@ -14,7 +14,7 @@ Cкопировать  на sd-карту в /boot/
 
 Вставить SD карту в Raspberry и подключить MCP2515 canbus модуль
 
-Подключиться к Raspberry, по SSH
+Подключиться к Raspberry, по SSH  
 `login: pi`  
 `password: rpi` (или Ваш. Ввод пароля не отображается)
 
@@ -60,20 +60,20 @@ Cкопировать  на sd-карту в /boot/
 	gpu_mem=128
 	start_x=1
 
-***UPDATE***
+Update and upgrade
 
 	sudo apt update
 	sudo apt upgrade -y
 	
-***INSATALL KODI***
+Install KODI
 
 	sudo apt install -y kodi
 
-***Добавить автозагрузку для  KODI***
+Upstart KODI
 	
 	sudo nano /etc/systemd/system/kodi.service
 	
-****Вставить****
+past
 
 	[Unit]
 	Description = Kodi Media Center
@@ -87,7 +87,7 @@ Cкопировать  на sd-карту в /boot/
 	[Install]
 	WantedBy = multi-user.target
 
-***Активировать сервич и запустить KODI***
+Enable and Start service
 	
 	sudo systemctl enable kodi.service
 	sudo systemctl start kodi.service
