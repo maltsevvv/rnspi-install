@@ -181,7 +181,6 @@ Edit /boot/config.txt
 
 *connect MCP2515 - Raspberry*
 
-MCP : RPI  
 int : GPIO12  
 sck : GPIO21  
 si  : GPIO20  
