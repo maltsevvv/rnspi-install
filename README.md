@@ -40,10 +40,12 @@ Cкопировать  на sd-карту в /boot/
 
 ##Manual Install
 
-Редактируем /boot/config.txt
+Edit /boot/config.txt
   
 	sudo nano /boot/config.txt
-	
+
+*insert*
+
 	# HDMI to VGA adapter 
 	hdmi_group=1
 	hdmi_mode=6
@@ -72,6 +74,7 @@ Install KODI
 Upstart KODI
 	
 	sudo nano /etc/systemd/system/kodi.service  
+*insert*
 
 	[Unit]
 	Description = Kodi Media Center
@@ -90,68 +93,17 @@ Enable and Start service
 	sudo systemctl enable kodi.service
 	sudo systemctl start kodi.service
 
-***Создать каталоги для хранения медиа файлов***
+Creating directories for storing media files
 
 	sudo mkdir /home/pi/movies /home/pi/music /home/pi/mults
 	sudo chmod -R 0777 /home/pi/movies /home/pi/music /home/pi/mults`
 
-
-***Установить usbmount (для автоподключения usb дисков)
-
-	sudo apt install -y usbmount
-	mkdir /home/pi/tmpu && cd /home/pi/tmpu
-	wget https://github.com/nicokaiser/usbmount/releases/download/0.0.24/usbmount_0.0.24_all.deb
-	sudo dpkg -i usbmount_0.0.24_all.deb
-	cd /home/pi && rm -Rf /home/pi/tmpu 
-	sed -i 's/FS_MOUNTOPTIONS=""/FS_MOUNTOPTIONS="-fstype=vfat,iocharset=utf8,gid=1000,dmask=0007,fmask=0007"/' /etc/usbmount/usbmount.conf
-	
-***Установить can-utils python-pip***
-
-	sudo apt install python-pip
-	sudo apt install can-utils  
-	sudo pip install python-can
-
-## Установить ***skin.rnsd.zip*** или ***skin.rnse.zip*** в KODI через "Установить дополнение из zip"
-
-
-
-## Эмулировать тв-тюнер для RNSD
-
-***Копируем из папки skin.rnsd в /usr/local/bin/***
-
-	cp /home/pi/.kodi/addons/skin.rnsd/tvtuner.pyo /usr/local/bin/
-
-***Создаем файл для автозапуска***
-
-	sudo nano /etc/systemd/system/tvtuner.service
-
-***Вставить***
-
-	[Unit]
-	Description=Emulation tv-tuner 4BO919146B for RNSD
-	[Service]
-	Type=simple
-	ExecStart=/usr/bin/python /usr/local/bin/tvtuner.pyo
-	Restart=always
-	[Install]
-	WantedBy=multi-user.target
-
-# Активировать сервис и запустить тв-тюнер
-
-	sudo systemctl enable tvtuner.service
-	sudo systemctl start tvtuner.service
-	
-
-
-## Эмулировать тв-тюнер для RNSE, через интерфейс. После ввода пароля
-
-
-### Устаеовить SAMBA (файловый сервер, для копирования по локальной сети)
+Install SAMBA
 
 	sudo apt install -y samba
 	sudo nano /etc/samba/smb.conf
 	
-***Вставить. В самом конце файла***
+*insert at the end of the file*
 
 	[rns]
 	path = /home/pi/
@@ -163,20 +115,73 @@ Enable and Start service
 	force user = root
 	guest ok = yes
 
-***Перезапустить сервер. После перезапуска можно попасть на Raspberry с другого ПК \\localhost***
+Reboot service
 
-	sudo service smbd restart`  
+	sudo service smbd restart 
+
+Install usbmount
+
+	sudo apt install -y usbmount
+	mkdir /home/pi/tmpu && cd /home/pi/tmpu
+	wget https://github.com/nicokaiser/usbmount/releases/download/0.0.24/usbmount_0.0.24_all.deb
+	sudo dpkg -i usbmount_0.0.24_all.deb
+	cd /home/pi && rm -Rf /home/pi/tmpu 
+	sed -i 's/FS_MOUNTOPTIONS=""/FS_MOUNTOPTIONS="-fstype=vfat,iocharset=utf8,gid=1000,dmask=0007,fmask=0007"/' /etc/usbmount/usbmount.conf
+	
+Install can-utils & python-pip
+
+	sudo apt install python-pip can-utils  
+	sudo pip install python-can
 
 
-### Подключение canbus2 can1
+Install *skin.rnsd.zip* or *skin.rnse.zip* in KODI"
 
-	sudo nano /boot/config.txt`
+##Emulate TV tuner for RNSD
+
+Copy from folder skin.rnsd to /usr/local/bin/
+
+	sudo cp /home/pi/.kodi/addons/skin.rnsd/tvtuner.pyo /usr/local/bin/
+
+Upstart tvtuner
+
+	sudo nano /etc/systemd/system/tvtuner.service
+
+*insert*
+
+	[Unit]
+	Description=Emulation tv-tuner 4BO919146B for RNSD
+	[Service]
+	Type=simple
+	ExecStart=/usr/bin/python /usr/local/bin/tvtuner.pyo
+	Restart=always
+	[Install]
+	WantedBy=multi-user.target
+
+Enable & Start service
+
+	sudo systemctl enable tvtuner.service
+	sudo systemctl start tvtuner.service
+
+
+
+
+#If you need to connect a second canbus 
+
+Edit /boot/config.txt
+  
+	sudo nano /boot/config.txt
+
+*insert*
+
 	# Enable MCP2515 can1
 	cd /boot/overlays
 	wget https://github.com/maltsevvv/rnspi-install/raw/main/img/mcp2515-can1-0.dtbo	
 	dtoverlay=spi1-1cs,cs0_pin=16	
 	dtoverlay=mcp2515,spi1-0,oscillator=8000000,interrupt=12	
 
+*connect MCP2515 - Raspberry*
+
+MCP : RPI
 int : GPIO12  
 sck : GPIO21  
 si  : GPIO20  
