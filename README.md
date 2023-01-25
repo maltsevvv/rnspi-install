@@ -126,7 +126,8 @@ Install usbmount
 	mkdir /home/pi/tmpu && cd /home/pi/tmpu
 	wget https://github.com/nicokaiser/usbmount/releases/download/0.0.24/usbmount_0.0.24_all.deb
 	sudo dpkg -i usbmount_0.0.24_all.deb
-	cd /home/pi && rm -Rf /home/pi/tmpu 
+	cd /home/pi 
+	rm -r tmpu 
 	sudo sed -i 's/FS_MOUNTOPTIONS=""/FS_MOUNTOPTIONS="-fstype=vfat,iocharset=utf8,gid=1000,dmask=0007,fmask=0007"/' /etc/usbmount/usbmount.conf
 	
 Install can-utils & python-pip
