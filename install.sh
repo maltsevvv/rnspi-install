@@ -175,6 +175,7 @@ dpkg -i usbmount_0.0.24_all.deb
 cd /home/pi && rm -Rf /home/pi/tmpu
 # add cirilic utf-8
 sed -i 's/FS_MOUNTOPTIONS=""/FS_MOUNTOPTIONS="-fstype=vfat,iocharset=utf8,gid=1000,dmask=0007,fmask=0007"/' /etc/usbmount/usbmount.conf
+sed -i 's/FILESYSTEMS="vfat ext2 ext3 ext4 hfsplus"/FILESYSTEMS="vfat ext2 ext3 ext4 hfsplus ntfs fuseblk"/' /etc/usbmount/usbmount.conf
 echo ${GREEN}"usbmount installed"${NC}
 echo
 #
