@@ -97,7 +97,7 @@ Enable and Start service
 Creating directories for storing media files
 
 	sudo mkdir /home/pi/movies /home/pi/music /home/pi/mults
-	sudo chmod -R 0777 /home/pi/movies /home/pi/music /home/pi/mults`
+	sudo chmod -R 0777 /home/pi/movies /home/pi/music /home/pi/mults
 
 Install SAMBA
 
