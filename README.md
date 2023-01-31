@@ -136,6 +136,15 @@ Install can-utils & python-pip
 	sudo apt install python-pip can-utils  
 	sudo pip install python-can
 
+Upstart can0
+	sudo nano /etc/network/interfaces
+
+*insert at the end of the file*
+	auto can0
+	  iface can0 inet manual
+	  pre-up /sbin/ip link set can0 type can bitrate 100000
+	  up /sbin/ifconfig can0 up
+	  down /sbin/ifconfig can0 down
 
 Install *skin.rnsd.zip* or *skin.rnse.zip* in KODI"
 
