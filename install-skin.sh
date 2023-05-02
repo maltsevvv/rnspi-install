@@ -32,8 +32,8 @@ echo
 ####
 
 echo ${BWhite}"Сreate media folder"${NC}
-mkdir /home/pi/movies /home/pi/music /home/pi/mults
-chmod -R 0777 /home/pi/movies /home/pi/music /home/pi/mults
+mkdir /home/pi/movies /home/pi/music /home/pi/mults /home/pi/clips
+chmod -R 0777 /home/pi/movies /home/pi/music /home/pi/mults /home/pi/clips
 echo ${GREEN}"OK"${NC}
 echo
 ####
