@@ -33,7 +33,11 @@ sudo sh install.sh
 
 *Находим свой телефон*
 
+`connect 5C:10:C5:E0:94:A6`
+
 `pair 5C:10:C5:E0:94:A6`
+
+`trust 5C:10:C5:E0:94:A6`
 
 `Request PIN code`
 
