@@ -9,7 +9,7 @@
 1. Скачать Raspberry Pi Imager
 	`https://www.raspberrypi.com/software/`
 
-2. Записать образ ОС Raspbian Lite на SD-карту, через Raspberry Pi Imager
+2. Записать образ ОС Raspbian Lite на SD-карту, через Raspberry Pi Imager 
 	`Bullseye` или `Buster`
 	login: `pi`  password: `rpi`
 
