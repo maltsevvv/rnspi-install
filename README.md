@@ -6,23 +6,25 @@
 
 ## Auto Install
 
-Записать на sd-карту с образом Raspbian Buster Lite
-https://downloads.raspberrypi.org/raspbian/images/raspbian-2019-07-12/
+1. Скачать Raspberry Pi Imager
+	`https://www.raspberrypi.com/software/`
 
-Cкопировать  на sd-карту в /boot/ `skin.rnsd-main.zip` или `skin.rnse-main.zip`
+2. Записать образ ОС Raspbian Lite на SD-карту, через Raspberry Pi Imager
+	`Bullseye` или `Buster`
+	login: `pi`  password: `rpi`
 
-Вставить SD карту в Raspberry и подключить MCP2515 canbus модуль
+3. Cкопировать на SD-карту в /boot/ 
+	`skin.rnsd.zip` или `skin.rnse.zip`
 
-Подключиться к Raspberry, по SSH  
+4. Подключить модули MCP2515 canbus, pcm5102 dac, вставить SD-карту
+	
+Подключиться к Raspberry, по SSH  (putty)
 login: `pi`  
-password: `rpi` (или Ваш. Ввод пароля не отображается)
+password: `rpi` (Ввод пароля не отображается)
 
 ```
-cd /tmp
-wget -q https://github.com/maltsevvv/rnspi-install/archive/main.zip
-unzip main.zip
-cd rnspi-install-main
-sudo sh install.sh
+wget -P /tmp https://raw.githubusercontent.com/maltsevvv/rnspi-install/main/install.sh
+sudo sh /tmp/install.sh
 ```
 
 *Если используете USB Bluetoothe модуль, то его необходимо подключать вручную. После установки этого скрипта*
