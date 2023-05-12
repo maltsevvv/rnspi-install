@@ -10,17 +10,17 @@
 	`https://www.raspberrypi.com/software/`
 
 2. Записать образ ОС Raspbian Lite на SD-карту, через Raspberry Pi Imager  
-	`Bullseye` или `Buster`
-	login: `pi`  password: `rpi`
+	`Bullseye` или `Buster`  
+	login: `pi`  
+	password: `rpi`
 
-3. Cкопировать на SD-карту в /boot/ 
+3. Cкопировать на SD-карту в /boot/  
 	`skin.rnsd.zip` или `skin.rnse.zip`
 
 4. Подключить модули MCP2515 canbus, pcm5102 dac, вставить SD-карту
-	
-Подключиться к Raspberry, по SSH  (putty)
-login: `pi`  
-password: `rpi` (Ввод пароля не отображается)
+5. Подключиться к Raspberry, по SSH  (putty)  
+	login: `pi`  
+	password: `rpi` (Ввод пароля не отображается)
 
 ```
 wget -P /tmp https://raw.githubusercontent.com/maltsevvv/rnspi-install/main/install.sh
