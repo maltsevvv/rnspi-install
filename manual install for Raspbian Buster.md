@@ -326,3 +326,25 @@ pcm.!default {
 ```
 sudo reboot
 ```
+
+# USB Bluetoothe модуль
+*Если используете USB Bluetoothe модуль, то его необходимо подключать вручную*
+
+`sudo bluetoothctl`
+
+`scan on`
+
+*Находим MAC своего телефон* 
+
+`pair 5C:10:C5:E0:94:A6`
+
+`connect 5C:10:C5:E0:94:A6`
+
+`trust 5C:10:C5:E0:94:A6`
+
+`Request PIN code`
+
+`[agent] Enter PIN code: 1234`
+	
+`exit`
+
