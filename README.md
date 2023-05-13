@@ -11,7 +11,7 @@ sudo sh /tmp/install.sh
 ```
 
 
-# Для подключения 2-ого MCP2515 can модуля
+### Для подключения 2-ого MCP2515 can модуля
 ```
 cd /boot/overlays
 wget https://github.com/maltsevvv/rnspi-install/raw/main/img/mcp2515-can1-0.dtbo
