@@ -1,4 +1,4 @@
-##Manual Install IF You using Raspbian Buster Kodi 18
+## INSTAKK IF You using Raspbian Buster Kodi 18
 
 Edit /boot/config.txt
   
