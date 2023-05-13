@@ -10,6 +10,9 @@ wget -P /tmp https://raw.githubusercontent.com/maltsevvv/rnspi-install/main/inst
 sudo sh /tmp/install.sh
 ```
 
+### Manual Install
+*Raspbian Buster Kodi 18*
+https://github.com/maltsevvv/rnspi-install/blob/046bd32bd4fe9ce1c464c522c02650c860fdda0f/manual%20install%20for%20Raspbian%20Buster.md?plain=1#L1
 
 ### Для подключения 2-ого MCP2515 can модуля
 ```
