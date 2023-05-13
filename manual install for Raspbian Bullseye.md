@@ -140,6 +140,9 @@ sudo systemctl start tvtuner.service
 
 # INSTALL BLUETOOTHE RECIEVER
 ```
+hostnamectl set-hostname --pretty "rns"
+```
+```
 sudo apt install -y --no-install-recommends pulseaudio
 ```
 ```
