@@ -323,11 +323,9 @@ pcm.!default {
 ```
 
 #### Bluetooth Manager  
-`Downloads`  
-https://github.com/wastis/BluetoothManager/archive/refs/heads/master.zip
+[`Downloads`](https://github.com/wastis/BluetoothManager/archive/refs/heads/master.zip)
 
-# INSTALL IN KODI
-*Settings/Add-ons/Install from zip file*
+##### INSTALL IN KODI *Settings/Add-ons/Install from zip file*
 
 ```
 sudo reboot
