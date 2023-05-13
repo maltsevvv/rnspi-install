@@ -5,23 +5,6 @@
 
 
 ## Auto Install
-
-1. Скачать Raspberry Pi Imager
-	`https://www.raspberrypi.com/software/`
-
-2. Записать образ ОС Raspbian Lite на SD-карту, через Raspberry Pi Imager  
-	`Bullseye` или `Buster`  
-	login: `pi`  
-	password: `rpi`
-
-3. Cкопировать на SD-карту в /boot/  
-	`skin.rnsd.zip` или `skin.rnse.zip`
-
-4. Подключить модули MCP2515 canbus, pcm5102 dac, вставить SD-карту
-5. Подключиться к Raspberry, по SSH  (putty)  
-	login: `pi`  
-	password: `rpi` (Ввод пароля не отображается)
-
 ```
 wget -P /tmp https://raw.githubusercontent.com/maltsevvv/rnspi-install/main/install.sh
 sudo sh /tmp/install.sh
@@ -29,235 +12,19 @@ sudo sh /tmp/install.sh
 
 *Если используете USB Bluetoothe модуль, то его необходимо подключать вручную. После установки этого скрипта*
 
-`sudo bluetoothctl`
-
-`scan on`
-
-*Находим свой телефон*
-
-`connect 5C:10:C5:E0:94:A6`
-
-`pair 5C:10:C5:E0:94:A6`
-
-`trust 5C:10:C5:E0:94:A6`
-
-`Request PIN code`
-
-`[agent] Enter PIN code: 1234`
-	
-`exit`
-
-
-
-##Manual Install
-
-Edit /boot/config.txt
-  
+#### Для подключения 2-ого MCP2515 can модуля
+```
+cd /boot/overlays
+wget https://github.com/maltsevvv/rnspi-install/raw/main/img/mcp2515-can1-0.dtbo
+```
 ```
 sudo nano /boot/config.txt
 ```
-
-*insert*
 ```
-# HDMI to VGA adapter
-hdmi_group=1
-hdmi_mode=6
-
-# Enable MCP2515 can0
-dtparam=spi=on
-dtoverlay=mcp2515-can0,oscillator=8000000,interrupt=25
-dtoverlay=spi-bcm2835-overlay
-
-# Enable audio (loads snd-hifiberry) and comment #dtparam=audio=on
-dtoverlay=hifiberry-dac
-
-# Enable video core & MPEG
-gpu_mem=128
-start_x=1
+# Enable MCP2515 can1
+dtoverlay=spi1-1cs,cs0_pin=16	
+dtoverlay=mcp2515,spi1-0,oscillator=8000000,interrupt=12	
 ```
-
-Update and upgrade
-
-```
-sudo apt update
-```
-
-Install KODI
-```
-sudo apt install -y kodi
-```
-
-```
-sudo nano /etc/systemd/system/kodi.service
-```
-
-```
-[Unit]
-Description = Kodi Media Center
-[Service]
-User = pi
-Group = pi
-Type = simple
-ExecStart = /usr/bin/kodi-standalone
-Restart = always
-RestartSec = 15
-[Install]
-WantedBy = multi-user.target
-```
-
-```
-sudo systemctl enable kodi.service
-sudo systemctl start kodi.service
-```
-
-Creating directories for storing media files
-```
-sudo mkdir /home/pi/movies /home/pi/music /home/pi/mults /home/pi/cllips 
-sudo chmod -R 0777 /home/pi/movies /home/pi/music /home/pi/mults /home/pi/cllips 
-```
-
-Install SAMBA
-```
-sudo apt install -y samba
-```
-
-```
-sudo nano /etc/samba/smb.conf
-```
-
-*insert at the end of the file*
-```
-[rns]
-path = /home/pi/
-create mask = 0775
-directory mask = 0775
-writeable = yes
-browseable = yes
-public = yes
-force user = root
-guest ok = yes
-```
-
-Reboot service
-```
-sudo service smbd restart 
-```
-
-Install can-utils
-```
-sudo apt install can-utils  
-```
-
-Install python-pip #if using Raspbian Buster
-```
-sudo apt install python-pip
-```
-Install python-pip #if using Raspbian Bullseye
-```
-sudo apt install -y python3-pip
-```
-
-```
-sudo pip install python-can
-```
-
-Upstart can0
-```
-sudo nano /etc/network/interfaces
-```
-
-*insert at the end of the file*
-```
-auto can0
-  iface can0 inet manual
-  pre-up /sbin/ip link set can0 type can bitrate 100000
-  up /sbin/ifconfig can0 up
-  down /sbin/ifconfig can0 down
-```
-
-
-Install usbmount #if using Raspbian Buster
-```
-sudo apt install -y usbmount
-```
-
-```
-mkdir /home/pi/tmpu && cd /home/pi/tmpu
-wget https://github.com/nicokaiser/usbmount/releases/download/0.0.24/usbmount_0.0.24_all.deb
-sudo dpkg -i usbmount_0.0.24_all.deb
-cd /home/pi 
-rm -r tmpu 
-sudo sed -i 's/FS_MOUNTOPTIONS=""/FS_MOUNTOPTIONS="-fstype=vfat,iocharset=utf8,gid=1000,dmask=0007,fmask=0007"/' /etc/usbmount/usbmount.conf 
-sudo sed -i 's/FILESYSTEMS="vfat ext2 ext3 ext4 hfsplus"/FILESYSTEMS="vfat ext2 ext3 ext4 hfsplus ntfs fuseblk"/' /etc/usbmount/usbmount.conf
-```
-
-
-
-Install `skin.rnsd.zip` or `skin.rnse.zip` in KODI"
-
-##Emulate TV tuner for RNSD
-####if using Raspbian Buster
-Copy from folder skin.rnsd to /usr/local/bin/
-```
-sudo cp /home/pi/.kodi/addons/skin.rnsd/tvtuner.pyo /usr/local/bin/
-```
-
-```
-sudo nano /etc/systemd/system/tvtuner.service
-```
-
-```
-[Unit]
-Description=Emulation tv-tuner 4BO919146B for RNSD
-[Service]
-Type=simple
-ExecStart=/usr/bin/python /usr/local/bin/tvtuner.pyo
-Restart=always
-[Install]
-WantedBy=multi-user.target
-```
-
-####if using Raspbian Bullseye
-```
-sudo cp /home/pi/.kodi/addons/skin.rnsd/tvtuner.pyc /usr/local/bin/
-```
-
-```
-sudo nano /etc/systemd/system/tvtuner.service
-```
-
-```
-[Unit]
-Description=Emulation tv-tuner 4BO919146B for RNSD
-[Service]
-Type=simple
-ExecStart=/usr/bin/python /usr/local/bin/tvtuner.pyc
-Restart=always
-[Install]
-WantedBy=multi-user.target
-```
-
-```
-sudo systemctl enable tvtuner.service
-sudo systemctl start tvtuner.service
-```
-
-
-
-#If you need to connect a second canbus 
-
-Edit /boot/config.txt
-  
-	sudo nano /boot/config.txt
-
-*insert*
-
-	# Enable MCP2515 can1
-	cd /boot/overlays
-	wget https://github.com/maltsevvv/rnspi-install/raw/main/img/mcp2515-can1-0.dtbo	
-	dtoverlay=spi1-1cs,cs0_pin=16	
-	dtoverlay=mcp2515,spi1-0,oscillator=8000000,interrupt=12	
-
 *connect MCP2515 - Raspberry*
 
 int : GPIO12  
