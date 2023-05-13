@@ -10,7 +10,11 @@ wget -P /tmp https://raw.githubusercontent.com/maltsevvv/rnspi-install/main/inst
 sudo sh /tmp/install.sh
 ```
 
-*Если используете USB Bluetoothe модуль, то его необходимо подключать вручную. После установки этого скрипта*
+
+
+
+
+
 
 #### Для подключения 2-ого MCP2515 can модуля
 ```
