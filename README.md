@@ -11,10 +11,12 @@ sudo sh /tmp/install.sh
 ```
 
 ### Manual Install
-*Raspbian Buster Kodi 18*
-https://github.com/maltsevvv/rnspi-install/blob/046bd32bd4fe9ce1c464c522c02650c860fdda0f/manual%20install%20for%20Raspbian%20Buster.md?plain=1#L1
+[Raspbian Bullseye Kodi 19](https://github.com/maltsevvv/rnspi-install/blob/main/manual%20install%20for%20Raspbian%20Bullseye.md#manual-install-if-you-using-raspbian-bullseye-kodi-19)  
+[Raspbian Buster Kodi 18](https://github.com/maltsevvv/rnspi-install/blob/main/manual%20install%20for%20Raspbian%20Buster.md#manual-install-if-you-using-raspbian-buster-kodi-18)
+[Connect Bluetooth for Kodi 18](https://github.com/maltsevvv/rnspi-install/blob/main/manual%20install%20for%20Raspbian%20Buster.md#usb-bluetoothe-%D0%BC%D0%BE%D0%B4%D1%83%D0%BB%D1%8C)
 
-### Для подключения 2-ого MCP2515 can модуля
+
+#### Для подключения 2-ого MCP2515 can модуля
 ```
 cd /boot/overlays
 wget https://github.com/maltsevvv/rnspi-install/raw/main/img/mcp2515-can1-0.dtbo
