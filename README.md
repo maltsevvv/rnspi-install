@@ -112,8 +112,8 @@ sudo systemctl start kodi.service
 
 Creating directories for storing media files
 ```
-sudo mkdir /home/pi/movies /home/pi/music /home/pi/mults
-sudo chmod -R 0777 /home/pi/movies /home/pi/music /home/pi/mults
+sudo mkdir /home/pi/movies /home/pi/music /home/pi/mults /home/pi/cllips 
+sudo chmod -R 0777 /home/pi/movies /home/pi/music /home/pi/mults /home/pi/cllips 
 ```
 
 Install SAMBA
@@ -143,24 +143,18 @@ Reboot service
 sudo service smbd restart 
 ```
 
-Install usbmount
+Install can-utils
 ```
-sudo apt install -y usbmount
-```
-
-```
-mkdir /home/pi/tmpu && cd /home/pi/tmpu
-wget https://github.com/nicokaiser/usbmount/releases/download/0.0.24/usbmount_0.0.24_all.deb
-sudo dpkg -i usbmount_0.0.24_all.deb
-cd /home/pi 
-rm -r tmpu 
-sudo sed -i 's/FS_MOUNTOPTIONS=""/FS_MOUNTOPTIONS="-fstype=vfat,iocharset=utf8,gid=1000,dmask=0007,fmask=0007"/' /etc/usbmount/usbmount.conf 
-sudo sed -i 's/FILESYSTEMS="vfat ext2 ext3 ext4 hfsplus"/FILESYSTEMS="vfat ext2 ext3 ext4 hfsplus ntfs fuseblk"/' /etc/usbmount/usbmount.conf
+sudo apt install can-utils  
 ```
 
-Install can-utils & python-pip
+Install python-pip #if using Raspbian Buster
 ```
-sudo apt install python-pip can-utils  
+sudo apt install python-pip
+```
+Install python-pip #if using Raspbian Bullseye
+```
+sudo apt install -y python3-pip
 ```
 
 ```
@@ -182,10 +176,27 @@ auto can0
 ```
 
 
+Install usbmount #if using Raspbian Buster
+```
+sudo apt install -y usbmount
+```
+
+```
+mkdir /home/pi/tmpu && cd /home/pi/tmpu
+wget https://github.com/nicokaiser/usbmount/releases/download/0.0.24/usbmount_0.0.24_all.deb
+sudo dpkg -i usbmount_0.0.24_all.deb
+cd /home/pi 
+rm -r tmpu 
+sudo sed -i 's/FS_MOUNTOPTIONS=""/FS_MOUNTOPTIONS="-fstype=vfat,iocharset=utf8,gid=1000,dmask=0007,fmask=0007"/' /etc/usbmount/usbmount.conf 
+sudo sed -i 's/FILESYSTEMS="vfat ext2 ext3 ext4 hfsplus"/FILESYSTEMS="vfat ext2 ext3 ext4 hfsplus ntfs fuseblk"/' /etc/usbmount/usbmount.conf
+```
+
+
+
 Install `skin.rnsd.zip` or `skin.rnse.zip` in KODI"
 
 ##Emulate TV tuner for RNSD
-
+####if using Raspbian Buster
 Copy from folder skin.rnsd to /usr/local/bin/
 ```
 sudo cp /home/pi/.kodi/addons/skin.rnsd/tvtuner.pyo /usr/local/bin/
@@ -201,6 +212,26 @@ Description=Emulation tv-tuner 4BO919146B for RNSD
 [Service]
 Type=simple
 ExecStart=/usr/bin/python /usr/local/bin/tvtuner.pyo
+Restart=always
+[Install]
+WantedBy=multi-user.target
+```
+
+####if using Raspbian Bullseye
+```
+sudo cp /home/pi/.kodi/addons/skin.rnsd/tvtuner.pyc /usr/local/bin/
+```
+
+```
+sudo nano /etc/systemd/system/tvtuner.service
+```
+
+```
+[Unit]
+Description=Emulation tv-tuner 4BO919146B for RNSD
+[Service]
+Type=simple
+ExecStart=/usr/bin/python /usr/local/bin/tvtuner.pyc
 Restart=always
 [Install]
 WantedBy=multi-user.target
