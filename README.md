@@ -26,26 +26,9 @@ Copy to SD-card в `/boot` [wpa_supplicant.conf](https://github.com/maltsevvv/rn
 
 
 ### [CAN bus commands](https://github.com/maltsevvv/rnspi-install/blob/e6c6dae49056ac5a839e0b212b30da1c50cfdde5/canbus.md)  
-  
-  
 
-#### Для подключения 2-ого MCP2515 can модуля
-```
-cd /boot/overlays
-wget https://github.com/maltsevvv/rnspi-install/raw/main/img/mcp2515-can1-0.dtbo
-```
-```
-sudo nano /boot/config.txt
-```
-```
-# Enable MCP2515 can1
-dtoverlay=spi1-1cs,cs0_pin=16	
-dtoverlay=mcp2515,spi1-0,oscillator=8000000,interrupt=12	
-```
-*connect MCP2515 - Raspberry*
 
-int : GPIO12  
-sck : GPIO21  
-si  : GPIO20  
-so  : GPIO19  
-cs  : GPIO16
+#### Dual MCP2515 CAN Interfaces
+ 
+https://forums.raspberrypi.com/viewtopic.php?t=330013
+https://github.com/raspberrypi/linux/issues/1804
