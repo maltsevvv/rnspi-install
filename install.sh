@@ -491,6 +491,16 @@ if grep -Fxq 'VERSION="10 (buster)"' '/etc/os-release'; then
 fi
 echo
 
+
+
+
+	# OS BULLSEYE #
+	if grep -Fxq 'VERSION="11 (bullseye)"' '/etc/os-release'; then
+	unzip /boot/skin.rnse*bullseye.zip -d /home/pi/.kodi/addons/ > /dev/null 2>&1
+	# OS BUSTER #
+	elif grep -Fxq 'VERSION="10 (buster)"' '/etc/os-release'; then
+		unzip /boot/skin.rnse*buster.zip -d /home/pi/.kodi/addons/ > /dev/null 2>&1
+	fi
 #
 #
 ##############################################
@@ -500,8 +510,9 @@ echo -n ${BWhite}"Use HDMI to VGA adapter ? yes / no "${NC}
 read answer
 if [ "$answer" != "${answer#[Y|y]}" ]; then
 	mv /boot/config.txt /boot/config.txt_original
-	cat <<'EOF' > /boot/config.txt
-
+	# OS BULLSEYE #
+	if grep -Fxq 'VERSION="11 (bullseye)"' '/etc/os-release'; then
+		cat <<'EOF' > /boot/config.txt
 # HDMI to VGA adapter for RNS
 hdmi_force_hotplug=1
 disable_overscan=1
@@ -519,9 +530,42 @@ dtoverlay=mcp2515-can0,oscillator=8000000,interrupt=25
 dtoverlay=spi-bcm2835-overlay
 
 EOF
+	elif grep -Fxq 'VERSION="10 (buster)"' '/etc/os-release'; then
+		cat <<'EOF' > /boot/config.txt
+# HDMI to VGA adapter for RNS
+hdmi_force_hotplug=1
+disable_overscan=1
+hdmi_ignore_edid=0xa5000080
+hdmi_group=2
+hdmi_mode=87
+hdmi_timings 800 0 51 44 121 460 0 10 9 14 0 0 0 32 1 16000000 3
+framebuffer_width=400
+framebuffer_height=230
+
+# Enable MCP2515 CanBus
+dtparam=spi=on
+dtoverlay=mcp2515-can0,oscillator=8000000,interrupt=25
+dtoverlay=spi-bcm2835-overlay
+
+EOF
+	fi
 else
 	mv /boot/config.txt /boot/config.txt_original
-	cat <<'EOF' > /boot/config.txt
+	# OS BULLSEYE #
+	if grep -Fxq 'VERSION="11 (bullseye)"' '/etc/os-release'; then
+		cat <<'EOF' > /boot/config.txt
+# Video output Analog 3,5mm composite PAL
+sdtv_mode=2
+dtoverlay=vc4-kms-v3d
+
+# Enable MCP2515 CanBus
+dtparam=spi=on
+dtoverlay=mcp2515-can0,oscillator=8000000,interrupt=25
+dtoverlay=spi-bcm2835-overlay
+
+EOF
+	elif grep -Fxq 'VERSION="10 (buster)"' '/etc/os-release'; then
+		cat <<'EOF' > /boot/config.txt
 # Video output Analog 3,5mm composite PAL
 sdtv_mode=2
 
@@ -531,6 +575,7 @@ dtoverlay=mcp2515-can0,oscillator=8000000,interrupt=25
 dtoverlay=spi-bcm2835-overlay
 
 EOF
+	fi
 fi
 echo
 #
