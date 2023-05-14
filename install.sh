@@ -1,6 +1,8 @@
 #!/bin/bash
 
 BWhite='\033[1;37m'; BBlue='\033[1;34m'; RED='\033[0;31m'; GREEN='\033[0;32m'; NC='\033[0m' # color
+IP=$(hostname -I)
+
 if
 [ $(id -u) -ne 0 ]; then echo "Please run as root"; exit 1; fi
 
@@ -12,30 +14,39 @@ echo
 echo ${BWhite}"Сhecking the internet connection"${NC}
 echo -e "GET http://google.com HTTP/1.0\n\n" | nc google.com 80 > /dev/null 2>&1
 [ $? -eq 0 ]
-if [ $? -eq 0 ]; then echo ${GREEN}"OK"${NC}; else echo ${RED}"NOT internet connection"${NC}; exit 0; fi
+if [ $? -eq 0 ]; then echo ${GREEN}"Internet connected"${NC}; else echo ${RED}"NOT internet connection"${NC}; exit 0; fi
 echo
 
 echo ${BWhite}"Check file on SD card in /boot/ SKIN.RNSD or SKIN.RNSE"${NC}
 if [ -e /boot/skin.rnsd*.zip ]; then
-	echo ${GREEN}"FOUND SKIN.RNS-D"${NC}
+	echo ${GREEN}"Found skin.rnsd"${NC}
 elif [ -e /boot/skin.rnse*.zip ]; then
-	echo ${GREEN}"FOUND SKIN.RNS-E"${NC}
+	echo ${GREEN}"Found skin.rnse"${NC}
 else 
-	echo ${RED}"SKIN not found"${NC}
+	echo ${RED}"NOT found skin.rns*.zip"${NC}
 	exit 0
 fi
-
+echo
 echo ${BWhite}"Update system"${NC}
-apt update -y
+apt update -y > /dev/null 2>&1
+if [ $? -eq 0 ]
+then
+	echo ${GREEN}"Successfully"${NC}
+else
+	echo ${RED}"NOT system update"${NC}
+	exit 0
+fi
 echo
 #
 #
 ##############################################
 #              INSTALL KODI                  #
 ##############################################
-echo ${BWhite}"Install kodi"${NC}
-apt install -y kodi
-cat <<'EOF' > /etc/systemd/system/kodi.service
+echo ${BWhite}"Installing KODI"${NC}
+apt install -y kodi > /dev/null 2>&1
+if [ $? -eq 0 ]
+then
+	cat <<'EOF' > /etc/systemd/system/kodi.service
 [Unit]
 Description=Kodi Media Center
 [Service]
@@ -48,63 +59,89 @@ RestartSec=15
 [Install]
 WantedBy=multi-user.target
 EOF
-
-# Disable versioncheck
-sed -i '/service.xbmc.versioncheck/d' /usr/share/kodi/system/addon-manifest.xml
-echo ${GREEN}"Disable service.xbmc.versioncheck"${NC}
-#
-systemctl enable kodi.service
-systemctl start kodi.service
+	echo ${GREEN}"Successfully"${NC}
+	systemctl enable kodi.service
+	systemctl start kodi.service
+else
+	echo ${RED}"NOT installed"${NC}
+	exit 0
+fi
 echo
 #
 #
 ##############################################
 #               INSTALL CanBus               #
 ##############################################
-echo ${BWhite}"Install can-utils"${NC}
-apt install -y can-utils
-echo
-#
-echo ${BWhite}"Install python-pip"${NC}
-if grep -Fxq 'VERSION="11 (bullseye)"' '/etc/os-release'; then
-	apt install -y python3-pip
-elif grep -Fxq 'VERSION="10 (buster)"' '/etc/os-release'; then
-	apt install -y python-pip
-fi
-#
-echo ${BWhite}"Install python-can"${NC}
-pip install python-can
-echo
-#
-cat <<'EOF' >> /etc/network/interfaces
+echo ${BWhite}"Installing can-utils"${NC}
+apt install -y can-utils  > /dev/null 2>&1
+if [ $? -eq 0 ]
+then
+	if grep -Fxq 'auto can0' '/etc/network/interfaces'; then
+		echo
+	else
+		cat <<'EOF' >> /etc/network/interfaces
 auto can0
   iface can0 inet manual
   pre-up /sbin/ip link set can0 type can bitrate 100000
   up /sbin/ifconfig can0 up
   down /sbin/ifconfig can0 down
 EOF
-
-echo ${BWhite}"Enable MCP2515 CanBus /boot/config.txt"${NC}
-cat <<'EOF' >> /boot/config.txt
-
-# Enable MCP2515 CanBus
-dtparam=spi=on
-dtoverlay=mcp2515-can0,oscillator=8000000,interrupt=25
-dtoverlay=spi-bcm2835-overlay
-EOF
+	fi
+	echo ${GREEN}"Successfully"${NC}
+else
+	echo ${RED}"NOT installed"${NC}
+	exit 0
+fi
+echo
+#
+echo ${BWhite}"Installing python-pip"${NC}
+if grep -Fxq 'VERSION="11 (bullseye)"' '/etc/os-release'; then
+	apt install -y python3-pip  > /dev/null 2>&1
+	if [ $? -eq 0 ]
+	then
+		echo ${GREEN}"Successfully"${NC}
+	else
+		echo ${RED}"NOT installed"${NC}
+		exit 0
+	fi
+elif grep -Fxq 'VERSION="10 (buster)"' '/etc/os-release'; then
+	apt install -y python-pip  > /dev/null 2>&1
+	if [ $? -eq 0 ]
+	then
+		echo ${GREEN}"Successfully"${NC}
+	else
+		echo ${RED}"NOT installed"${NC}
+		exit 0
+	fi
+fi
+echo
+#
+echo ${BWhite}"Installing python-can"${NC}
+pip install python-can > /dev/null 2>&1
+if [ $? -eq 0 ]
+then
+	echo ${GREEN}"Successfully"${NC}
+else
+	echo ${RED}"NOT installed"${NC}
+	exit 0
+fi
 echo
 #
 #
 ##############################################
 #               INSTALL SAMBA                #
 ##############################################
-echo ${BWhite}"Install samba"${NC}
 echo "samba-common samba-common/workgroup string  WORKGROUP" | sudo debconf-set-selections
 echo "samba-common samba-common/dhcp boolean true" | sudo debconf-set-selections
 echo "samba-common samba-common/do_debconf boolean true" | sudo debconf-set-selections
-apt install -y samba
-#config samba
-cat <<'EOF' >> /etc/samba/smb.conf
+echo ${BWhite}"Installing samba"${NC}
+apt install -y samba > /dev/null 2>&1
+if [ $? -eq 0 ]
+then
+	if grep -Fxq 'path = /home/pi/' '/etc/samba/smb.conf'; then
+		echo ${GREEN}"Successfully"${NC}
+	else
+		cat <<'EOF' >> /etc/samba/smb.conf
 [rns]
 path = /home/pi/
 create mask = 0775
@@ -115,13 +152,13 @@ public = yes
 force user = root
 guest ok = yes
 EOF
-service smbd restart
-echo ${GREEN}"OK"${NC}
-echo
-#
-echo ${BWhite}"Сreate media folder"${NC}
-mkdir /home/pi/movies /home/pi/music /home/pi/mults /home/pi/clips
-chmod -R 0777 /home/pi/movies /home/pi/music /home/pi/mults /home/pi/clips
+	echo ${GREEN}"Successfully"${NC}
+	fi
+	service smbd restart	
+else
+	echo ${RED}"NOT installed"${NC}
+	exit 0
+fi
 echo
 #
 #
@@ -129,11 +166,11 @@ echo
 #             INSTALL SKIN RNS*              #
 ##############################################
 if (systemctl -q is-active kodi.service); then
-	echo ${BWhite}"stop kodi (10sec.)"${NC}
+	echo ${BWhite}"STOP Kodi"${NC}
 	systemctl stop kodi.service
 	sleep 10
 elif (systemctl -q is-active kodi.service); then
-	echo ${BWhite}"stop kodi (+10sec.)"${NC}
+	echo ${BWhite}"STOP Kodi (+10sec.)"${NC}
 	systemctl stop kodi.service
 	sleep 10
 exit 1
@@ -143,6 +180,7 @@ echo
 #             INSTALL SKIN RNSD              #
 ##############################################
 if [ -e /boot/skin.rnsd*.zip ] ; then
+	rm -r /home/pi/.kodi/addons/skin.rns*
 	# OS BULLSEYE #
 	if grep -Fxq 'VERSION="11 (bullseye)"' '/etc/os-release'; then
 		unzip /boot/skin.rnsd*bullseye.zip -d /home/pi/.kodi/addons/ > /dev/null 2>&1
@@ -191,54 +229,20 @@ elif [ -e /boot/skin.rnse*.zip ] ; then
 	sed -i -e '$i \  <addon optional="true">skin.rnse</addon>' /usr/share/kodi/system/addon-manifest.xml
 	sed -i 's/lookandfeel.skin" default="true">skin.estuary/lookandfeel.skin">skin.rnse/' /home/pi/.kodi/userdata/guisettings.xml
 	echo ${GREEN}"SKIN.RNSE INSTALLED BY DEFAULT"${NC}
-
 fi
+echo
 #
 #
-##############################################
-#       HDMI to VGA adapter for RNS          #
-##############################################
-echo -n ${BWhite}"Use HDMI to VGA adapter ? yes / no "${NC}
-read answer
-if [ "$answer" != "${answer#[Y|y]}" ]; then
-	sed -i 's/#hdmi_force_hotplug=1/hdmi_force_hotplug=1/' /boot/config.txt
-	sed -i 's/#disable_overscan=1/disable_overscan=1/' /boot/config.txt
-	sed -i 's/dtoverlay=vc4-kms-v3d/dtoverlay=vc4-fkms-v3d/' /boot/config.txt
-	cat <<'EOF' >> /boot/config.txt
-
-# HDMI to VGA adapter for RNS
-hdmi_ignore_edid=0xa5000080
-hdmi_group=2
-hdmi_mode=87
-hdmi_timings 800 0 51 44 121 460 0 10 9 14 0 0 0 32 1 16000000 3
-framebuffer_width=400
-framebuffer_height=230
-EOF
-fi
-#
-#
-##############################################
-#      INSTALL HiFiberry DAC PCM5102         #
-##############################################
-echo -n ${BWhite}"Use HiFiberry DAC (PCM5102) ? yes / no "${NC}
-read answer
-if [ "$answer" != "${answer#[Yy]}" ] ;then
-	sed -i 's/dtparam=audio=on/#dtparam=audio=on/' /boot/config.txt
-	cat <<'EOF' >> /boot/config.txt
-
-dtoverlay=hifiberry-dac
-EOF
-	echo ${GREEN}"Enabled HiFiberry DAC ? yes / no "${NC}
-fi
+mkdir /home/pi/movies /home/pi/music /home/pi/mults /home/pi/clips
+chmod -R 0777 /home/pi/movies /home/pi/music /home/pi/mults /home/pi/clips
+echo ${GREEN}"Successfully created media folder"${NC}
+echo
 #
 #
 ##############################################
 #                SETTINGS KODI               #
 ##############################################
-
-# Add sources /home/pi/movies/ & /home/pi/music/
-
-cat <<'EOF' >> /home/pi/.kodi/userdata/sources.xml
+cat <<'EOF' > /home/pi/.kodi/userdata/sources.xml
 <sources>
    <programs>
        <default pathversion="1"></default>
@@ -270,10 +274,8 @@ cat <<'EOF' >> /home/pi/.kodi/userdata/sources.xml
    </games>
 </sources>
 EOF
-
 sudo chown pi:pi /home/pi/.kodi/userdata/sources.xml
-
-echo ${GREEN}"Add sources /home/pi/"${NC}
+echo ${GREEN}"Add media sources /home/pi/"${NC}
 
 # Disable Screensaver
 sed -i 's/id="screensaver.mode" default="true">screensaver.xbmc.builtin.dim/id="screensaver.mode">/' /home/pi/.kodi/userdata/guisettings.xml
@@ -290,8 +292,11 @@ echo ${GREEN}"Amplifi volume up to 30.0dB"${NC}
 # Enable web-server
 sed -i 's/id="services.webserverauthentication" default="true">true/id="services.webserverauthentication">false/' /home/pi/.kodi/userdata/guisettings.xml
 sed -i 's/id="services.webserver" default="true">false/id="services.webserver">true/' /home/pi/.kodi/userdata/guisettings.xml
-echo ${GREEN}"Enable web-server"${NC}
-echo $(hostname -I):8080
+echo ${GREEN}"Enable web-server"${NC}& echo http://${IP}:8080/
+
+# Disable versioncheck
+sed -i '/service.xbmc.versioncheck/d' /usr/share/kodi/system/addon-manifest.xml
+echo
 #
 #
 ##############################################
@@ -301,7 +306,14 @@ echo -n ${BWhite}"INSTALL BLUETOOTHE RECIEVER ? yes / no "${NC}
 read answer
 if [ "$answer" != "${answer#[Yy]}" ] ;then
 	hostnamectl set-hostname --pretty "rns"
-	apt install -y --no-install-recommends pulseaudio
+	apt install -y --no-install-recommends pulseaudio > /dev/null 2>&1
+	if [ $? -eq 0 ]
+	then
+		echo ${GREEN}"Successfully install PulseAudio"${NC}
+	else
+		echo ${RED}"NOT install PulseAudio"${NC}
+		exit 0
+	fi
 	usermod -a -G pulse-access root
 	usermod -a -G bluetooth pulse
 	mv /etc/pulse/client.conf /etc/pulse/client.conf.orig
@@ -324,7 +336,14 @@ Restart=on-failure
 EOF
 	systemctl enable --now pulseaudio.service
 	systemctl --global mask pulseaudio.socket
-	apt install -y --no-install-recommends bluez-tools pulseaudio-module-bluetooth
+	apt install -y --no-install-recommends bluez-tools pulseaudio-module-bluetooth > /dev/null 2>&1
+	if [ $? -eq 0 ]
+	then
+		echo ${GREEN}"Successfully install pulseaudio-module-bluetooth"${NC}
+	else
+		echo ${RED}"NOT install pulseaudio-module-bluetooth"${NC}
+		exit 0
+	fi
 	# Bluetooth settings
 	cat <<'EOF' > /etc/bluetooth/main.conf
 [General]
@@ -438,17 +457,15 @@ pcm.!default {
   slave.pcm "softvol"
 }
 EOF
-	echo ${GREEN}"Add config /etc/asound.conf"${NC}
-
-#               BluetoothManager          #
+	echo ${GREEN}"Successfully install bluetooth reciever"${NC}
+#   BluetoothManager          #
 	unzip /home/pi/.kodi/addons/skin.rns*/resources/Bluetooth*.zip -d /home/pi/.kodi/addons/ > /dev/null 2>&1
 	sed -i -e '$i \  <addon optional="true">script.bluetooth.man</addon>' /usr/share/kodi/system/addon-manifest.xml
-else
-	cat <<'EOF' >> /boot/config.txt
-dtoverlay=disable-bt
-EOF
-	echo ${GREEN}"Bluetooth Disable"${NC}
+	
 fi
+echo
+#
+#
 #
 #
 ##############################################
@@ -457,13 +474,82 @@ fi
 if grep -Fxq 'VERSION="10 (buster)"' '/etc/os-release'; then
 	echo ${BWhite}"install usbmount"${NC}
 	apt install -y usbmount
-	mkdir /home/pi/tmpu && cd /home/pi/tmpu
-	wget https://github.com/nicokaiser/usbmount/releases/download/0.0.24/usbmount_0.0.24_all.deb
-	dpkg -i usbmount_0.0.24_all.deb
-	cd /home/pi && rm -Rf /home/pi/tmpu
-	# ADD CIRILIC  UTF-8
-	sed -i 's/FS_MOUNTOPTIONS=""/FS_MOUNTOPTIONS="-fstype=vfat,iocharset=utf8,gid=1000,dmask=0007,fmask=0007"/' /etc/usbmount/usbmount.conf
-	sed -i 's/FILESYSTEMS="vfat ext2 ext3 ext4 hfsplus"/FILESYSTEMS="vfat ext2 ext3 ext4 hfsplus ntfs fuseblk"/' /etc/usbmount/usbmount.conf
+	if [ $? -eq 0 ]
+	then
+		mkdir /home/pi/tmpu && cd /home/pi/tmpu
+		wget https://github.com/nicokaiser/usbmount/releases/download/0.0.24/usbmount_0.0.24_all.deb
+		dpkg -i usbmount_0.0.24_all.deb
+		cd /home/pi && rm -Rf /home/pi/tmpu
+		# add cirilic UTF-8
+		sed -i 's/FS_MOUNTOPTIONS=""/FS_MOUNTOPTIONS="-fstype=vfat,iocharset=utf8,gid=1000,dmask=0007,fmask=0007"/' /etc/usbmount/usbmount.conf
+		sed -i 's/FILESYSTEMS="vfat ext2 ext3 ext4 hfsplus"/FILESYSTEMS="vfat ext2 ext3 ext4 hfsplus ntfs fuseblk"/' /etc/usbmount/usbmount.conf
+		echo ${GREEN}"Successfully"${NC}
+	else
+		echo ${RED}"NOT installed"${NC}
+		exit 0
+	fi
+fi
+echo
+
+#
+#
+##############################################
+#            EDIT /boot/config.txt           #
+##############################################
+echo -n ${BWhite}"Use HDMI to VGA adapter ? yes / no "${NC}
+read answer
+if [ "$answer" != "${answer#[Y|y]}" ]; then
+	mv /boot/config.txt /boot/config.txt_original
+	cat <<'EOF' > /boot/config.txt
+
+# HDMI to VGA adapter for RNS
+hdmi_force_hotplug=1
+disable_overscan=1
+dtoverlay=vc4-fkms-v3d
+hdmi_ignore_edid=0xa5000080
+hdmi_group=2
+hdmi_mode=87
+hdmi_timings 800 0 51 44 121 460 0 10 9 14 0 0 0 32 1 16000000 3
+framebuffer_width=400
+framebuffer_height=230
+
+# Enable MCP2515 CanBus
+dtparam=spi=on
+dtoverlay=mcp2515-can0,oscillator=8000000,interrupt=25
+dtoverlay=spi-bcm2835-overlay
+
+EOF
+else
+	mv /boot/config.txt /boot/config.txt_original
+	cat <<'EOF' > /boot/config.txt
+# Video output Analog 3,5mm composite PAL
+sdtv_mode=2
+
+# Enable MCP2515 CanBus
+dtparam=spi=on
+dtoverlay=mcp2515-can0,oscillator=8000000,interrupt=25
+dtoverlay=spi-bcm2835-overlay
+
+EOF
+fi
+echo
+#
+#
+##############################################
+#         ADD HiFiberry DAC PCM5102          #
+##############################################
+echo -n ${BWhite}"Use HiFiberry DAC (PCM5102) ? yes / no "${NC}
+read answer
+if [ "$answer" != "${answer#[Yy]}" ] ;then
+	cat <<'EOF' >> /boot/config.txt
+# Enable audio 
+dtoverlay=hifiberry-dac
+EOF
+else
+	cat <<'EOF' >> /boot/config.txt
+# Enable audio 3,5mm
+dtparam=audio=on
+EOF
 fi
 echo
 #
