@@ -180,7 +180,7 @@ echo
 #             INSTALL SKIN RNSD              #
 ##############################################
 if [ -e /boot/skin.rnsd*.zip ] ; then
-	rm -r /home/pi/.kodi/addons/skin.rns*
+	#rm -r /home/pi/.kodi/addons/skin.rns*
 	# OS BULLSEYE #
 	if grep -Fxq 'VERSION="11 (bullseye)"' '/etc/os-release'; then
 		unzip /boot/skin.rnsd*bullseye.zip -d /home/pi/.kodi/addons/ > /dev/null 2>&1
