@@ -466,19 +466,17 @@ fi
 echo
 #
 #
-#
-#
 ##############################################
 #               INSTALL USBMOUNT             #
 ##############################################
 if grep -Fxq 'VERSION="10 (buster)"' '/etc/os-release'; then
 	echo ${BWhite}"install usbmount"${NC}
-	apt install -y usbmount
+	apt install -y usbmount > /dev/null 2>&1
 	if [ $? -eq 0 ]
 	then
 		mkdir /home/pi/tmpu && cd /home/pi/tmpu
 		wget https://github.com/nicokaiser/usbmount/releases/download/0.0.24/usbmount_0.0.24_all.deb
-		dpkg -i usbmount_0.0.24_all.deb
+		dpkg -i usbmount_0.0.24_all.deb > /dev/null 2>&1
 		cd /home/pi && rm -Rf /home/pi/tmpu
 		# add cirilic UTF-8
 		sed -i 's/FS_MOUNTOPTIONS=""/FS_MOUNTOPTIONS="-fstype=vfat,iocharset=utf8,gid=1000,dmask=0007,fmask=0007"/' /etc/usbmount/usbmount.conf
@@ -490,17 +488,6 @@ if grep -Fxq 'VERSION="10 (buster)"' '/etc/os-release'; then
 	fi
 fi
 echo
-
-
-
-
-	# OS BULLSEYE #
-	if grep -Fxq 'VERSION="11 (bullseye)"' '/etc/os-release'; then
-	unzip /boot/skin.rnse*bullseye.zip -d /home/pi/.kodi/addons/ > /dev/null 2>&1
-	# OS BUSTER #
-	elif grep -Fxq 'VERSION="10 (buster)"' '/etc/os-release'; then
-		unzip /boot/skin.rnse*buster.zip -d /home/pi/.kodi/addons/ > /dev/null 2>&1
-	fi
 #
 #
 ##############################################
