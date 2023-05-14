@@ -28,7 +28,8 @@ Copy to SD-card в `/boot` [wpa_supplicant.conf](https://github.com/maltsevvv/rn
 ### [CAN bus commands](https://github.com/maltsevvv/rnspi-install/blob/e6c6dae49056ac5a839e0b212b30da1c50cfdde5/canbus.md)  
 
 
+ 
 #### Dual MCP2515 CAN Interfaces
  
-https://forums.raspberrypi.com/viewtopic.php?t=330013
+https://forums.raspberrypi.com/viewtopic.php?t=330013  
 https://github.com/raspberrypi/linux/issues/1804
