@@ -2,6 +2,8 @@
 ![prototype scheme](https://github.com/maltsevvv/rnspi-install/blob/main/img/rnsd.png)
 ![prototype scheme](https://github.com/maltsevvv/rnspi-install/blob/main/img/rnse.png)
 
+## Схема подключении
+https://sites.google.com/view/rnspi/
 
 
 ## Auto Install
@@ -12,19 +14,19 @@ sudo sh /tmp/install.sh
 
 ### Manual Install
 [Raspbian Bullseye Kodi 19](https://github.com/maltsevvv/rnspi-install/blob/main/manual%20install%20for%20Raspbian%20Bullseye.md#manual-install-if-you-using-raspbian-bullseye-kodi-19)  
-[Raspbian Buster Kodi 18](https://github.com/maltsevvv/rnspi-install/blob/main/manual%20install%20for%20Raspbian%20Buster.md#manual-install-if-you-using-raspbian-buster-kodi-18)
+[Raspbian Buster Kodi 18](https://github.com/maltsevvv/rnspi-install/blob/main/manual%20install%20for%20Raspbian%20Buster.md#manual-install-if-you-using-raspbian-buster-kodi-18)  
 [Connect Bluetooth for Kodi 18](https://github.com/maltsevvv/rnspi-install/blob/main/manual%20install%20for%20Raspbian%20Buster.md#usb-bluetoothe-%D0%BC%D0%BE%D0%B4%D1%83%D0%BB%D1%8C)
-  
-#### [Скачать skin.rns*.zip](https://github.com/maltsevvv/rnspi-install/tree/901cde9e8235d21487f509bb3487f4a7ec8c67cb/share) версии для ознакомления
+
+## [Downloads skin.rns*.zip for Kodi](https://github.com/maltsevvv/rnspi-install/tree/901cde9e8235d21487f509bb3487f4a7ec8c67cb/share)
  
-#### Подключение к WIFI
-[wpa_supplicant.conf](https://github.com/maltsevvv/rnspi-install/blob/035eabf01159378c28eaf0b3793232733d6ed31e/share/wpa_supplicant.conf) скопировать в на SD-карту в /boot    
+#### Connect to WIFI  
+скопировать в на SD-карту в /boot [wpa_supplicant.conf](https://github.com/maltsevvv/rnspi-install/blob/035eabf01159378c28eaf0b3793232733d6ed31e/share/wpa_supplicant.conf)     
 
     ssid="Имя_Сети"
     psk="пароль"
 
-#### Команды для кан шины
-[Can-utils](https://github.com/maltsevvv/rnspi-install/blob/e6c6dae49056ac5a839e0b212b30da1c50cfdde5/canbus.md)  
+
+### [Команды для кан шины](https://github.com/maltsevvv/rnspi-install/blob/e6c6dae49056ac5a839e0b212b30da1c50cfdde5/canbus.md)  
   
   
 
