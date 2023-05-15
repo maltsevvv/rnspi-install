@@ -184,13 +184,13 @@ echo
 if [ -e /boot/skin.rnsd*.zip ] ; then
 	#rm -r /home/pi/.kodi/addons/skin.rns*
 	unzip /boot/skin.rnsd*.zip -d /home/pi/.kodi/addons/ > /dev/null 2>&1
-	cp /home/pi/.kodi/addons/skin.rnsd/tvtuner.pyc /usr/local/bin/
+	cp /home/pi/.kodi/addons/skin.rnsd/tvtuner.pyo /usr/local/bin/
 	cat <<'EOF' > /etc/systemd/system/tvtuner.service
 [Unit]
 Description=Emulation tv-tuner 4DO919146B
 [Service]
 Type=simple
-ExecStart=/usr/bin/python /usr/local/bin/tvtuner.pyc
+ExecStart=/usr/bin/python /usr/local/bin/tvtuner.pyo
 Restart=always
 [Install]
 WantedBy=multi-user.target
