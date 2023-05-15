@@ -184,8 +184,9 @@ echo
 if [ -e /boot/skin.rnsd*.zip ] ; then
 	#rm -r /home/pi/.kodi/addons/skin.rns*
 	unzip /boot/skin.rnsd*.zip -d /home/pi/.kodi/addons/ > /dev/null 2>&1
-	cp /home/pi/.kodi/addons/skin.rnsd/tvtuner.pyo /usr/local/bin/
-	cat <<'EOF' > /etc/systemd/system/tvtuner.service
+	if [ -e /boot/skin.rns*buster.zip ] ; then
+		cp /home/pi/.kodi/addons/skin.rnsd/tvtuner.pyo /usr/local/bin/
+		cat <<'EOF' > /etc/systemd/system/tvtuner.service
 [Unit]
 Description=Emulation tv-tuner 4DO919146B
 [Service]
@@ -195,6 +196,19 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
+	elif [ -e /boot/skin.rns*bullseye.zip ] ; then
+		cp /home/pi/.kodi/addons/skin.rnsd/tvtuner.pyc /usr/local/bin/
+		cat <<'EOF' > /etc/systemd/system/tvtuner.service
+[Unit]
+Description=Emulation tv-tuner 4DO919146B
+[Service]
+Type=simple
+ExecStart=/usr/bin/python /usr/local/bin/tvtuner.pyc
+Restart=always
+[Install]
+WantedBy=multi-user.target
+EOF
+	fi
 	systemctl enable tvtuner.service > /dev/null 2>&1
 	sed -i -e '$i \  <addon optional="true">skin.rnsd</addon>' /usr/share/kodi/system/addon-manifest.xml
 	sed -i 's/lookandfeel.skin" default="true">skin.estuary/lookandfeel.skin">skin.rnsd/' /home/pi/.kodi/userdata/guisettings.xml
