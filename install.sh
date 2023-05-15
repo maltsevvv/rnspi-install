@@ -383,8 +383,12 @@ EOF
 	usermod -a -G bluetooth pulse
 
 	# PulseAudio settings
-	echo "load-module module-bluetooth-policy" >> /etc/pulse/system.pa
-	echo "load-module module-bluetooth-discover" >> /etc/pulse/system.pa
+	if grep -Fxq 'module-bluetooth-discover' '/etc/pulse/system.pa'; then
+		echo
+	else
+		echo "load-module module-bluetooth-policy" >> /etc/pulse/system.pa
+		echo "load-module module-bluetooth-discover" >> /etc/pulse/system.pa
+	fi
 
 	# Bluetooth udev script
 	cat <<'EOF' > /usr/local/bin/bluetooth-udev
