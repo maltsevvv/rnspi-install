@@ -4,27 +4,30 @@ BWhite='\033[1;37m'; BBlue='\033[1;34m'; RED='\033[0;31m'; GREEN='\033[0;32m'; N
 IP=$(hostname -I)
 
 if
-[ $(id -u) -ne 0 ]; then echo "Please run as root"; exit 1; fi
+[ $(id -u) -ne 0 ]; then
+	echo "Please run as root"
+	exit 1
+fi
 
 echo ${BWhite}"Сhecking the internet connection"${NC}
 echo -e "GET http://google.com HTTP/1.0\n\n" | nc google.com 80 > /dev/null 2>&1
 [ $? -eq 0 ]
-if [ $? -eq 0 ]; then echo ${GREEN}"Internet connected"${NC}; else echo ${RED}"NOT internet connection"${NC}; exit 0; fi
+if [ $? -eq 0 ]; thenecho ${GREEN}"Internet connected"${NC}; else echo ${RED}"NOT internet connection"${NC}; exit 0; fi
 echo
 
 echo ${BWhite}"Сhecking Version Raspbian and Version skin.rns*"${NC}
 if grep -Fxq 'VERSION="10 (buster)"' '/etc/os-release'; then
-	echo ${GREEN}"You using Raspbian Buster"${NC}
+	echo ${GREEN}"Raspbian Buster"${NC}
 	if [ -e /boot/skin.rns*buster.zip ] ; then
-		echo ${GREEN}"Found skin for Buster"${NC}
+		echo ${GREEN}"Skin for Buster"${NC}
 	else
 		echo ${RED}"NOT found skin for Buster on SD card in /boot/"${NC}
 		exit 0
 	fi
 elif grep -Fxq 'VERSION="11 (bullseye)"' '/etc/os-release'; then 
-	echo ${GREEN}"You using Raspbian Bullseye"${NC}
+	echo ${GREEN}"Raspbian Bullseye"${NC}
 	if [ -e /boot/skin.rns*bullseye.zip ] ; then
-		echo ${GREEN}"Found skin for Bullseye"${NC}
+		echo ${GREEN}"Skin for Bullseye"${NC}
 	else
 		echo ${RED}"NOT found skin for Bullseye on SD card in /boot/"${NC}
 		exit 0
@@ -49,8 +52,7 @@ echo
 ##############################################
 echo ${BWhite}"Installing KODI"${NC}
 apt install -y kodi > /dev/null 2>&1
-if [ $? -eq 0 ]
-then
+if [ $? -eq 0 ]; then
 	cat <<'EOF' > /etc/systemd/system/kodi.service
 [Unit]
 Description=Kodi Media Center
@@ -79,8 +81,7 @@ echo
 ##############################################
 echo ${BWhite}"Installing can-utils"${NC}
 apt install -y can-utils  > /dev/null 2>&1
-if [ $? -eq 0 ]
-then
+if [ $? -eq 0 ]; then
 	if grep -Fxq 'auto can0' '/etc/network/interfaces'; then
 		echo
 	else
@@ -102,8 +103,7 @@ echo
 echo ${BWhite}"Installing python-pip"${NC}
 if grep -Fxq 'VERSION="11 (bullseye)"' '/etc/os-release'; then
 	apt install -y python3-pip  > /dev/null 2>&1
-	if [ $? -eq 0 ]
-	then
+	if [ $? -eq 0 ]; then
 		echo ${GREEN}"Successfully"${NC}
 	else
 		echo ${RED}"NOT installed"${NC}
@@ -111,8 +111,7 @@ if grep -Fxq 'VERSION="11 (bullseye)"' '/etc/os-release'; then
 	fi
 elif grep -Fxq 'VERSION="10 (buster)"' '/etc/os-release'; then
 	apt install -y python-pip  > /dev/null 2>&1
-	if [ $? -eq 0 ]
-	then
+	if [ $? -eq 0 ]; then
 		echo ${GREEN}"Successfully"${NC}
 	else
 		echo ${RED}"NOT installed"${NC}
@@ -123,8 +122,7 @@ echo
 #
 echo ${BWhite}"Installing python-can"${NC}
 pip install python-can > /dev/null 2>&1
-if [ $? -eq 0 ]
-then
+if [ $? -eq 0 ]; then
 	echo ${GREEN}"Successfully"${NC}
 else
 	echo ${RED}"NOT installed"${NC}
@@ -141,8 +139,7 @@ echo "samba-common samba-common/dhcp boolean true" | sudo debconf-set-selections
 echo "samba-common samba-common/do_debconf boolean true" | sudo debconf-set-selections
 echo ${BWhite}"Installing samba"${NC}
 apt install -y samba > /dev/null 2>&1
-if [ $? -eq 0 ]
-then
+if [ $? -eq 0 ]; then
 	if grep -Fxq 'path = /home/pi/' '/etc/samba/smb.conf'; then
 		echo ${GREEN}"Successfully"${NC}
 	else
@@ -186,11 +183,9 @@ echo
 ##############################################
 if [ -e /boot/skin.rnsd*.zip ] ; then
 	#rm -r /home/pi/.kodi/addons/skin.rns*
-	# OS BULLSEYE #
-	if grep -Fxq 'VERSION="11 (bullseye)"' '/etc/os-release'; then
-		unzip /boot/skin.rnsd*bullseye.zip -d /home/pi/.kodi/addons/ > /dev/null 2>&1
-		cp /home/pi/.kodi/addons/skin.rnsd/tvtuner.pyc /usr/local/bin/
-		cat <<'EOF' > /etc/systemd/system/tvtuner.service
+	unzip /boot/skin.rnsd*.zip -d /home/pi/.kodi/addons/ > /dev/null 2>&1
+	cp /home/pi/.kodi/addons/skin.rnsd/tvtuner.pyc /usr/local/bin/
+	cat <<'EOF' > /etc/systemd/system/tvtuner.service
 [Unit]
 Description=Emulation tv-tuner 4DO919146B
 [Service]
@@ -200,22 +195,7 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
-	# OS BUSTER #
-	elif grep -Fxq 'VERSION="10 (buster)"' '/etc/os-release'; then
-		unzip /boot/skin.rnsd*buster.zip -d /home/pi/.kodi/addons/ > /dev/null 2>&1
-		cp /home/pi/.kodi/addons/skin.rnsd/tvtuner.pyo /usr/local/bin/
-		cat <<'EOF' > /etc/systemd/system/tvtuner.service
-[Unit]
-Description=Emulation tv-tuner 4DO919146B
-[Service]
-Type=simple
-ExecStart=/usr/bin/python /usr/local/bin/tvtuner.pyo
-Restart=always
-[Install]
-WantedBy=multi-user.target
-EOF
-	fi
-	systemctl enable tvtuner.service
+	systemctl enable tvtuner.service > /dev/null 2>&1
 	sed -i -e '$i \  <addon optional="true">skin.rnsd</addon>' /usr/share/kodi/system/addon-manifest.xml
 	sed -i 's/lookandfeel.skin" default="true">skin.estuary/lookandfeel.skin">skin.rnsd/' /home/pi/.kodi/userdata/guisettings.xml
 	echo ${GREEN}"SKIN.RNSD INSTALLED BY DEFAULT"${NC}
@@ -224,13 +204,7 @@ EOF
 #             INSTALL SKIN RNSE              #
 ##############################################
 elif [ -e /boot/skin.rnse*.zip ] ; then
-	# OS BULLSEYE #
-	if grep -Fxq 'VERSION="11 (bullseye)"' '/etc/os-release'; then
-	unzip /boot/skin.rnse*bullseye.zip -d /home/pi/.kodi/addons/ > /dev/null 2>&1
-	# OS BUSTER #
-	elif grep -Fxq 'VERSION="10 (buster)"' '/etc/os-release'; then
-		unzip /boot/skin.rnse*buster.zip -d /home/pi/.kodi/addons/ > /dev/null 2>&1
-	fi
+	unzip /boot/skin.rnse*.zip -d /home/pi/.kodi/addons/ > /dev/null 2>&1
 	sed -i -e '$i \  <addon optional="true">skin.rnse</addon>' /usr/share/kodi/system/addon-manifest.xml
 	sed -i 's/lookandfeel.skin" default="true">skin.estuary/lookandfeel.skin">skin.rnse/' /home/pi/.kodi/userdata/guisettings.xml
 	echo ${GREEN}"SKIN.RNSE INSTALLED BY DEFAULT"${NC}
@@ -305,6 +279,30 @@ echo
 #
 #
 ##############################################
+#               INSTALL USBMOUNT             #
+##############################################
+if grep -Fxq 'VERSION="10 (buster)"' '/etc/os-release'; then
+	echo ${BWhite}"install usbmount"${NC}
+	apt install -y usbmount > /dev/null 2>&1
+	if [ $? -eq 0 ]
+	then
+		mkdir /home/pi/tmpu && cd /home/pi/tmpu
+		wget https://github.com/nicokaiser/usbmount/releases/download/0.0.24/usbmount_0.0.24_all.deb > /dev/null 2>&1
+		dpkg -i usbmount_0.0.24_all.deb > /dev/null 2>&1
+		cd /home/pi && rm -Rf /home/pi/tmpu
+		# add cirilic and UTF-8
+		sed -i 's/FS_MOUNTOPTIONS=""/FS_MOUNTOPTIONS="-fstype=vfat,iocharset=utf8,gid=1000,dmask=0007,fmask=0007"/' /etc/usbmount/usbmount.conf
+		sed -i 's/FILESYSTEMS="vfat ext2 ext3 ext4 hfsplus"/FILESYSTEMS="vfat ext2 ext3 ext4 hfsplus ntfs fuseblk"/' /etc/usbmount/usbmount.conf
+		echo ${GREEN}"Successfully"${NC}
+	else
+		echo ${RED}"NOT installed"${NC}
+		exit 0
+	fi
+fi
+echo
+#
+#
+##############################################
 #         INSTALL BLUETOOTHE RECIEVER        #
 ##############################################
 echo -n ${BWhite}"INSTALL BLUETOOTHE RECIEVER ? yes / no "${NC}
@@ -339,7 +337,7 @@ PrivateTmp=true
 ExecStart=/usr/bin/pulseaudio --daemonize=no --system --disallow-exit --disable-shm --exit-idle-time=-1 --log-target=journal --realtime --no-cpu-limit
 Restart=on-failure
 EOF
-	systemctl enable --now pulseaudio.service
+	systemctl enable --now pulseaudio.service > /dev/null 2>&1
 	systemctl --global mask pulseaudio.socket
 	apt install -y --no-install-recommends bluez-tools pulseaudio-module-bluetooth > /dev/null 2>&1
 	if [ $? -eq 0 ]
@@ -384,16 +382,17 @@ KillSignal=SIGUSR1
 WantedBy=multi-user.target
 EOF
 	systemctl daemon-reload
-	systemctl enable bt-agent@hci0.service
+	systemctl enable bt-agent@hci0.service > /dev/null 2>&1
 	usermod -a -G bluetooth pulse
 
-	# PulseAudio settings
+	# PulseAudio settings add after load-module module-position-event-sounds
 	if grep -Fxq 'module-bluetooth-discover' '/etc/pulse/system.pa'; then
 		echo
 	else
 		echo "load-module module-bluetooth-policy" >> /etc/pulse/system.pa
 		echo "load-module module-bluetooth-discover" >> /etc/pulse/system.pa
 	fi
+
 
 	# Bluetooth udev script
 	cat <<'EOF' > /usr/local/bin/bluetooth-udev
@@ -471,30 +470,6 @@ EOF
 	unzip /home/pi/.kodi/addons/skin.rns*/resources/Bluetooth*.zip -d /home/pi/.kodi/addons/ > /dev/null 2>&1
 	sed -i -e '$i \  <addon optional="true">script.bluetooth.man</addon>' /usr/share/kodi/system/addon-manifest.xml
 	
-fi
-echo
-#
-#
-##############################################
-#               INSTALL USBMOUNT             #
-##############################################
-if grep -Fxq 'VERSION="10 (buster)"' '/etc/os-release'; then
-	echo ${BWhite}"install usbmount"${NC}
-	apt install -y usbmount > /dev/null 2>&1
-	if [ $? -eq 0 ]
-	then
-		mkdir /home/pi/tmpu && cd /home/pi/tmpu
-		wget https://github.com/nicokaiser/usbmount/releases/download/0.0.24/usbmount_0.0.24_all.deb
-		dpkg -i usbmount_0.0.24_all.deb > /dev/null 2>&1
-		cd /home/pi && rm -Rf /home/pi/tmpu
-		# add cirilic UTF-8
-		sed -i 's/FS_MOUNTOPTIONS=""/FS_MOUNTOPTIONS="-fstype=vfat,iocharset=utf8,gid=1000,dmask=0007,fmask=0007"/' /etc/usbmount/usbmount.conf
-		sed -i 's/FILESYSTEMS="vfat ext2 ext3 ext4 hfsplus"/FILESYSTEMS="vfat ext2 ext3 ext4 hfsplus ntfs fuseblk"/' /etc/usbmount/usbmount.conf
-		echo ${GREEN}"Successfully"${NC}
-	else
-		echo ${RED}"NOT installed"${NC}
-		exit 0
-	fi
 fi
 echo
 #
