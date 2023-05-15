@@ -118,7 +118,7 @@ auto can0
 
 ## Emulate TV tuner for RNSD
 ```
-sudo cp /home/pi/.kodi/addons/skin.rnsd/tvtuner.pyc /usr/local/bin/
+sudo cp /home/pi/.kodi/addons/skin.rnsd/tvtuner.pyo /usr/local/bin/
 ```
 ```
 sudo nano /etc/systemd/system/tvtuner.service
@@ -128,7 +128,7 @@ sudo nano /etc/systemd/system/tvtuner.service
 Description=Emulation tv-tuner 4BO919146B for RNSD
 [Service]
 Type=simple
-ExecStart=/usr/bin/python /usr/local/bin/tvtuner.pyc
+ExecStart=/usr/bin/python /usr/local/bin/tvtuner.pyo
 Restart=always
 [Install]
 WantedBy=multi-user.target
@@ -232,7 +232,7 @@ sudo systemctl daemon-reload
 sudo systemctl enable bt-agent@hci0.service
 sudo usermod -a -G bluetooth pulse
 ```
-#### PulseAudio settings
+#### PulseAudio settings add at the end of the file
 ```
 sudo nano /etc/pulse/system.pa
 ```
