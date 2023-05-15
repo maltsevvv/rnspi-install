@@ -182,7 +182,7 @@ echo
 #             INSTALL SKIN RNSD              #
 ##############################################
 if [ -e /boot/skin.rnsd*.zip ] ; then
-	#rm -r /home/pi/.kodi/addons/skin.rns*
+	rm -r /home/pi/.kodi/addons/skin.rns*
 	unzip /boot/skin.rnsd*.zip -d /home/pi/.kodi/addons/ > /dev/null 2>&1
 	if [ -e /boot/skin.rns*buster.zip ] ; then
 		cp /home/pi/.kodi/addons/skin.rnsd/tvtuner.pyo /usr/local/bin/
