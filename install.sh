@@ -8,7 +8,6 @@ if
 
 echo ${BWhite}"Сhecking the internet connection"${NC}
 echo -e "GET http://google.com HTTP/1.0\n\n" | nc google.com 80 > /dev/null 2>&1
-[ $? -eq 0 ]
 if [ $? -eq 0 ]; thenecho ${GREEN}"Internet connected"${NC}; else echo ${RED}"NOT internet connection"${NC}; exit 0; fi
 echo
 
