@@ -21,8 +21,8 @@ sudo sh /tmp/install.sh
 #### Connect to WIFI:  
 Copy to SD-card в `/boot` [wpa_supplicant.conf](https://github.com/maltsevvv/rnspi-install/blob/035eabf01159378c28eaf0b3793232733d6ed31e/share/wpa_supplicant.conf)     
 
-    ssid="NAME"
-    psk="PASSWORD"
+    ssid="my_wifi_ssid"
+    psk="my_password"
 
 
 ### [CAN bus commands](https://github.com/maltsevvv/rnspi-install/blob/e6c6dae49056ac5a839e0b212b30da1c50cfdde5/canbus.md)  
