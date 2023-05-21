@@ -19,7 +19,7 @@ sudo sh /tmp/install.sh
 
 
 #### Connect to WIFI:  
-Copy to SD-card в `/boot` [wpa_supplicant.conf](https://github.com/maltsevvv/rnspi-install/blob/035eabf01159378c28eaf0b3793232733d6ed31e/share/wpa_supplicant.conf)     
+Copy to SD-card в `/boot/` [wpa_supplicant.conf](https://github.com/maltsevvv/rnspi-install/blob/035eabf01159378c28eaf0b3793232733d6ed31e/share/wpa_supplicant.conf)     
 
     ssid="my_wifi_ssid"
     psk="my_password"
