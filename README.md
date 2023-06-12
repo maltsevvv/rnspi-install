@@ -10,10 +10,10 @@
     <img src="https://img.shields.io/badge/Free_skin-blue?style=for-the-badge&logo=Free_skin&logoColor=white" alt="Free_skin Badge"/>
   </a>
   <a href="https://telegram.me/maltsev_v_v">
-    <img src="https://img.shields.io/badge/Buy_skin_telegram-blue?style=for-the-badge&logo=Telegram&logoColor=white" alt="Buy_skin_telegram Badge"/>
+    <img src="https://img.shields.io/badge/15$_skin_telegram-blue?style=for-the-badge&logo=Telegram&logoColor=white" alt="Buy_skin_telegram Badge"/>
   </a>
   <a href="mailto:maltsev.v.v@hotmail.com">
-    <img src="https://img.shields.io/badge/Buy_skin_Email-blue?style=for-the-badge&logo=Email&logoColor=white" alt="Buy_skin_Email Badge"/>
+    <img src="https://img.shields.io/badge/15$_skin_Email-blue?style=for-the-badge&logo=Email&logoColor=white" alt="Buy_skin_Email Badge"/>
   </a>
 </div>
    
