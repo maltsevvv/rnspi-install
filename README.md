@@ -2,7 +2,12 @@
 <h1 align="center">Alternative replacement: CD-Changer, TV-tuner</h1>
 <h3 align="center"><img src="https://github.com/maltsevvv/rnspi-install/blob/main/img/rnsd.png"><img src="https://github.com/maltsevvv/rnspi-install/blob/main/img/rnse.png"</h3>
 
-## Auto Install
+## Auto Install  
+1. Burning Raspbian Image to SD Card  
+2. Copy the skin to the SD card, to the */boot* partition  
+3. Insert SD card into raspberry  
+   connect power  
+   connect to raspberry via SSH, via putty  
  
 ```
 wget -P /tmp https://raw.githubusercontent.com/maltsevvv/rnspi-install/main/install.sh
