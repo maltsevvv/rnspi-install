@@ -5,6 +5,18 @@
 ## Auto Install  
 > 1. Burning Raspbian Image to SD Card  (Rasbian Buster Lite or Rasbian Bullseye x32 Lite)
 > 2. Copy the skin.rns*.zip to the SD card, to the */boot* partition  
+<div id="badges">
+  <a href="https://github.com/maltsevvv/rnspi-install/tree/901cde9e8235d21487f509bb3487f4a7ec8c67cb/share">
+    <img src="https://img.shields.io/badge/Free_skin-blue?style=for-the-badge&logo=Free_skin&logoColor=white" alt="Free_skin Badge"/>
+  </a>
+  <a href="https://telegram.me/maltsev_v_v">
+    <img src="https://img.shields.io/badge/Buy_skin_telegram-blue?style=for-the-badge&logo=Telegram&logoColor=white" alt="Buy_skin_telegram Badge"/>
+  </a>
+  <a href="mailto:maltsev.v.v@hotmail.com">
+    <img src="https://img.shields.io/badge/Buy_skin_Email-blue?style=for-the-badge&logo=Email&logoColor=white" alt="Buy_skin_Email Badge"/>
+  </a>
+</div>
+   
 > 3. Insert SD card into raspberry  
    connect power  
    connect to raspberry via SSH, via putty  
@@ -19,13 +31,6 @@ sudo sh /tmp/install.sh
 [Raspbian Buster Kodi 18](https://github.com/maltsevvv/rnspi-install/blob/main/manual%20install%20for%20Raspbian%20Buster.md#manual-install-if-you-using-raspbian-buster-kodi-18)  
 [Connect Bluetooth for Kodi 18](https://github.com/maltsevvv/rnspi-install/blob/main/manual%20install%20for%20Raspbian%20Buster.md#usb-bluetoothe-%D0%BC%D0%BE%D0%B4%D1%83%D0%BB%D1%8C)
 
-#### Free skin.rns*.zip for kodi. CanBus not working
-<div id="badges">
-  <a href="https://github.com/maltsevvv/rnspi-install/tree/901cde9e8235d21487f509bb3487f4a7ec8c67cb/share">
-    <img src="https://img.shields.io/badge/download-blue?style=for-the-badge&logo=Download&logoColor=white" alt="Download Badge"/>
-  </a>
-</div>
-   
 #### If you want to install skin not on raspberry `Settings-> Add-ons-> Get Add-ons-> Install from zip file`
 
 
