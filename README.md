@@ -19,7 +19,13 @@ sudo sh /tmp/install.sh
 [Raspbian Buster Kodi 18](https://github.com/maltsevvv/rnspi-install/blob/main/manual%20install%20for%20Raspbian%20Buster.md#manual-install-if-you-using-raspbian-buster-kodi-18)  
 [Connect Bluetooth for Kodi 18](https://github.com/maltsevvv/rnspi-install/blob/main/manual%20install%20for%20Raspbian%20Buster.md#usb-bluetoothe-%D0%BC%D0%BE%D0%B4%D1%83%D0%BB%D1%8C)
 
-## [Downloads skin Kodi](https://github.com/maltsevvv/rnspi-install/tree/901cde9e8235d21487f509bb3487f4a7ec8c67cb/share)  
+#### Free skin.rns*.zip for kodi. CanBus not working
+<div id="badges">
+  <a href="https://github.com/maltsevvv/rnspi-install/tree/901cde9e8235d21487f509bb3487f4a7ec8c67cb/share">
+    <img src="https://img.shields.io/badge/download-blue?style=for-the-badge&logo=Download&logoColor=white" alt="Download Badge"/>
+  </a>
+</div>
+   
 #### If you want to install skin not on raspberry `Settings-> Add-ons-> Get Add-ons-> Install from zip file`
 
 
