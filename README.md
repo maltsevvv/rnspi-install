@@ -27,12 +27,21 @@ sudo sh /tmp/install.sh
 ```
 
 ### Manual Install
-[Raspbian Bullseye Kodi 19](https://github.com/maltsevvv/rnspi-install/blob/main/manual%20install%20for%20Raspbian%20Bullseye.md#manual-install-if-you-using-raspbian-bullseye-kodi-19)  
-[Raspbian Buster Kodi 18](https://github.com/maltsevvv/rnspi-install/blob/main/manual%20install%20for%20Raspbian%20Buster.md#manual-install-if-you-using-raspbian-buster-kodi-18)  
-[Connect Bluetooth for Kodi 18](https://github.com/maltsevvv/rnspi-install/blob/main/manual%20install%20for%20Raspbian%20Buster.md#usb-bluetoothe-%D0%BC%D0%BE%D0%B4%D1%83%D0%BB%D1%8C)
+<div id="badges">
+  <a href="https://github.com/maltsevvv/rnspi-install/blob/main/manual%20install%20for%20Raspbian%20Bullseye.md#manual-install-if-you-using-raspbian-bullseye-kodi-19">
+    <img src="https://img.shields.io/badge/Raspbian_Bullseye_Kodi_19-blue?style=for-the-badge&logo=RaspberryPi&logoColor=white" alt="Raspbian_Bullseye_Kodi_19 Badge"/>
+  </a>
+  <a href="https://github.com/maltsevvv/rnspi-install/blob/main/manual%20install%20for%20Raspbian%20Buster.md#manual-install-if-you-using-raspbian-buster-kodi-18">
+    <img src="https://img.shields.io/badge/Raspbian_Buster_Kodi_18-blue?style=for-the-badge&logo=RaspberryPi&logoColor=white" alt="Raspbian_Buster_Kodi_18 Badge"/>
+  </a>
+  <a href="https://github.com/maltsevvv/rnspi-install/blob/main/manual%20install%20for%20Raspbian%20Buster.md#usb-bluetoothe-%D0%BC%D0%BE%D0%B4%D1%83%D0%BB%D1%8C">
+    <img src="https://img.shields.io/badge/Connect_Bluetooth_for_Kodi_18-blue?style=for-the-badge&logo=RaspberryPI&logoColor=white" alt="Connect_Bluetooth_for_Kodi_18 Badge"/>
+  </a>
+</div>
+  
+#### Install skin.rns*.zip `Settings-> Add-ons-> Get Add-ons-> Install from zip file`
 
-#### If you want to install skin not on raspberry `Settings-> Add-ons-> Get Add-ons-> Install from zip file`
-
+--------------------------------------------------------------------------------------
 
 #### Connect to WIFI:  
 Copy to SD-card в `/boot/` [wpa_supplicant.conf](https://github.com/maltsevvv/rnspi-install/blob/035eabf01159378c28eaf0b3793232733d6ed31e/share/wpa_supplicant.conf)     
