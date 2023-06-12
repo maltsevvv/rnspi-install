@@ -7,7 +7,7 @@
 > 2. Copy the skin.rns*.zip to the SD card, to the */boot* partition  
 <div id="badges">
   <a href="https://github.com/maltsevvv/rnspi-install/tree/901cde9e8235d21487f509bb3487f4a7ec8c67cb/share">
-    <img src="https://img.shields.io/badge/Free_skin-blue?style=for-the-badge&logo=Free_skin&logoColor=white" alt="Free_skin Badge"/>
+    <img src="https://img.shields.io/badge/Free_skin-blue?style=for-the-badge&logo=Kodi&logoColor=white" alt="Free_skin Badge"/>
   </a>
   <a href="https://telegram.me/maltsev_v_v">
     <img src="https://img.shields.io/badge/15$_skin_telegram-blue?style=for-the-badge&logo=Telegram&logoColor=white" alt="Buy_skin_telegram Badge"/>
