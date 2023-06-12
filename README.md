@@ -3,9 +3,9 @@
 <h3 align="center"><img src="https://github.com/maltsevvv/rnspi-install/blob/main/img/rnsd.png"><img src="https://github.com/maltsevvv/rnspi-install/blob/main/img/rnse.png"</h3>
 
 ## Auto Install  
-1. Burning Raspbian Image to SD Card  (Rasbian Buster Lite or Rasbian Bullseye x32 Lite)
-2. Copy the skin.rns*.zip to the SD card, to the */boot* partition  
-3. Insert SD card into raspberry  
+> 1. Burning Raspbian Image to SD Card  (Rasbian Buster Lite or Rasbian Bullseye x32 Lite)
+> 2. Copy the skin.rns*.zip to the SD card, to the */boot* partition  
+> 3. Insert SD card into raspberry  
    connect power  
    connect to raspberry via SSH, via putty  
  
