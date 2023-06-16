@@ -351,3 +351,16 @@ sudo reboot
 	
 `exit`
 
+*Для удаления сопряжения с устройством*
+
+`sudo bluetoothctl`
+
+`paired-devices`
+
+*Видим MAC всех сопряжений* 
+
+`untrust 5C:10:C5:E0:94:A6`
+
+`remove 5C:10:C5:E0:94:A6`
+
+`exit`
