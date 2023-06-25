@@ -15,7 +15,7 @@ echo "---------------------------------------------------------"
 echo "Check Internet Connection"
 ping -c1 -w1 google.com 2>/dev/null 1>/dev/null
 if [ "$?" = 0 ]; then
-  echo ${GREEN}"Internet connection present..."${NC}
+  echo ${GREEN}"Successfully"${NC}
   echo "---------------------------------------------------------"
 else
   echo ${RED}"Inernet connection is missing"${NC}
