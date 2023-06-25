@@ -375,7 +375,7 @@ sleep 1
 #         INSTALL BLUETOOTHE RECIEVER        #
 ##############################################
 echo "---------------------------------------------------------"
-echo -n "Install Bluetooth riciever ? yes / no "
+echo -n "Install Bluetooth reciever ? yes / no "
 read answer
 if [ "$answer" != "${answer#[Yy]}" ] ;then
   hostnamectl set-hostname --pretty "rns"
@@ -641,8 +641,7 @@ fi
 #                 REBOOT SYSTEM              #
 ##############################################
 echo "---------------------------------------------------------"
-echo ${GREEN}"Installation Completed"${NC}
-echo ${GREEN}"Device Reboot Required"${NC}
+echo ${GREEN}"Installation Completed. Device Reboot Required"${NC}
 echo -n ${BWhite}"Reboot System Now ? yes / no "${NC}
 read answer
 if [ "$answer" != "${answer#[Yy]}" ] ;then
