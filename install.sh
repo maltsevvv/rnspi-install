@@ -517,7 +517,7 @@ if (whiptail --title "Enable PCM5102" --yesno "Use HiFiberry. Audio Card PCM5102
 	echo "Enable pcm5102"
 	echo "---------------------------------------------------------"
 	if ! grep -q $check_pcm5102 /boot/config.txt; then
-		sed -i -e "s/dtparam=audio=on/#dtparam=audio=on/" >> /boot/config.txt
+		sed -i -e "s/dtparam=audio=on/#dtparam=audio=on/" /boot/config.txt
 		cat <<'EOF' >> /boot/config.txt
 
 # Enable audio (HifiBerry DAC HiFi pcm5102a-hifi)
@@ -525,7 +525,7 @@ dtoverlay=hifiberry-dac
 EOF
 	fi
 else
-	sed -i -e "s/#dtparam=audio=on/dtparam=audio=on" >> /boot/config.txt
+	sed -i -e "s/#dtparam=audio=on/dtparam=audio=on" /boot/config.txt
 	sed -i '/# Enable audio (HifiBerry DAC HiFi pcm5102a-hifi)/d' /boot/config.txt
 	sed -i '/dtoverlay=hifiberry-dac/d' /boot/config.txt
 fi
