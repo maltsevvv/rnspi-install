@@ -576,6 +576,7 @@ EOF
 fi
 ####
 if (whiptail --title "Installation Completed" --yesno "Reboot System Now" 10 60) then
+	cp /boot/canserial.txt /home/pi/.canserial.txt
 	rm /home/pi/requirements.txt
 	reboot
 fi
