@@ -330,6 +330,24 @@ pcm.!default {
 sudo reboot
 ```
 
+# USB Bluetoothe модуль V5
+```
+hciconfig
+hci1:   Type: Primary  Bus: USB
+        BD Address: E4:5F:01:81:78:7F  ACL MTU: 1021:8  SCO MTU: 64:1
+        DOWN RUNNING
+        RX bytes:823 acl:0 sco:0 events:54 errors:0
+        TX bytes:2763 acl:0 sco:0 commands:54 errors:0
+
+```
+* Обновляем *
+
+```
+sudo rpi-update
+```
+
+* USB Bluetoothe модуль V5, необходимо подключать вручную*
+
 # USB Bluetoothe модуль
 *Если используете USB Bluetoothe модуль, то его необходимо подключать вручную*
 
