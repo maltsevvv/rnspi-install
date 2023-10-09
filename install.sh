@@ -405,7 +405,7 @@ cat <<'EOF' > /home/pi/.kodi/userdata/sources.xml
         <default pathversion="1"></default>
         <source>
             <name>192.168.0.3</name>
-            <path pathversion="1">smb://192.168.0.3/</path>
+            <path pathversion="1">smb://192.168.1.3/</path>
             <allowsharing>true</allowsharing>
         </source>
         <source>
