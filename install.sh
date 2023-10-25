@@ -58,6 +58,7 @@ echo "---------------------------------------------------------"
 status="$(dpkg-query -W --showformat='${db:Status-Status}' "$check_kodi" 2>&1)"
 if [ ! $? = 0 ] || [ ! "$status" = installed ]; then
 	apt install -y kodi
+	apt install -y kodi-pvr-iptvsimple
 	if [ ! $? = 0 ]; then
 		whiptail --title "KODI INSTALLATION ERROR" --msgbox "PLEASE RESTART THE INSTALLER! \nsudo sh install.sh" 10 60
 		exit 0
