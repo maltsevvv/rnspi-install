@@ -306,14 +306,19 @@ fi
 		# sed -i -e '$i \  <addon optional="true">script.bluetooth.man</addon>' /usr/share/kodi/system/addon-manifest.xml
 	# fi
 # fi
-####
+##############################################
+#             INSTALL SKIN RNSD              #
+##############################################
 if grep -q 'VERSION="10 (buster)"' /etc/os-release; then
+	rm -r /home/pi/.kodi/addons/skin.rns*
 	wget -P /tmp https://github.com/maltsevvv/maltsev-Kodi-Repo/raw/master/kodi18/skin.rnsd/skin.rnsd-18.0.1.zip
 	unzip /tmp/skin.rnsd*.zip -d /home/pi/.kodi/addons/ > /dev/null 2>&1
+	chown -R pi:pi /home/pi/.kodi/skin.rnsd
 	sed -i -e '$i \  <addon optional="true">skin.rnsd</addon>' /usr/share/kodi/system/addon-manifest.xml
 	sed -i -e 's/lookandfeel.skin" default="true">skin.estuary/lookandfeel.skin">skin.rnsd/' /home/pi/.kodi/userdata/guisettings.xml
 	wget -P /tmp https://github.com/maltsevvv/maltsev-Kodi-Repo/raw/master/repository.maltsev_kodi18/repository.maltsev_kodi18-1.0.0.zip
 	unzip /tmp/repository.maltsev_kod*.zip -d /home/pi/.kodi/addons/ > /dev/null 2>&1
+	chown -R pi:pi /home/pi/.kodi/repository.maltsev_kod18
 	sed -i -e '$i \  <addon>repository.maltsev_kodi18</addon>' /usr/share/kodi/system/addon-manifest.xml
 fi
 
