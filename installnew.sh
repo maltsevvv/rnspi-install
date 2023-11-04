@@ -24,8 +24,8 @@ else
     exit 0
 fi
 
-sudo apt-get update -y
-sudo apt-get upgrade -y
+sudo apt update -y
+sudo apt upgrade -y
 
 echo "---------------------------------------------------------"
 echo "Installing samba"
