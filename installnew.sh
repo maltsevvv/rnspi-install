@@ -312,20 +312,21 @@ fi
 if grep -q 'VERSION="10 (buster)"' /etc/os-release; then
 	wget -P /tmp https://github.com/maltsevvv/maltsev-Kodi-Repo/raw/master/kodi18/skin.rnsd/skin.rnsd-18.0.1.zip
 	wget -P /tmp https://github.com/maltsevvv/maltsev-Kodi-Repo/raw/master/repository.maltsev_kodi18/repository.maltsev_kodi18-1.0.0.zip
-	chown -R pi:pi /home/pi/.kodi/addons/repository.maltsev_kod18
+	#chown -R pi:pi /home/pi/.kodi/addons/repository.maltsev_kod18
 	sed -i -e '$i \  <addon>repository.maltsev_kodi18</addon>' /usr/share/kodi/system/addon-manifest.xml
 elif grep -q 'VERSION="11 (bullseye)"' /etc/os-release; then
 	wget -P /tmp https://github.com/maltsevvv/maltsev-Kodi-Repo/raw/master/kodi19/skin.rnsd/skin.rnsd-19.0.6.zip
 	wget -P /tmp https://github.com/maltsevvv/maltsev-Kodi-Repo/raw/master/repository.maltsev_kodi19/repository.maltsev_kodi19-1.0.0.zip
-	chown -R pi:pi /home/pi/.kodi/addons/repository.maltsev_kod19
+	#chown -R pi:pi /home/pi/.kodi/addons/repository.maltsev_kod19
 	sed -i -e '$i \  <addon>repository.maltsev_kodi19</addon>' /usr/share/kodi/system/addon-manifest.xml
 fi
 rm -r /home/pi/.kodi/addons/skin.rns*
 unzip /tmp/skin.rnsd*.zip -d /home/pi/.kodi/addons/ > /dev/null 2>&1
-chown -R pi:pi /home/pi/addons/.kodi/skin.rnsd
+unzip /tmp/repository.maltsev_kod*.zip -d /home/pi/.kodi/addons/ > /dev/null 2>&1
+chown -R pi:pi /home/pi/.kodi/addons/ #skin.rnsd
 sed -i -e '$i \  <addon optional="true">skin.rnsd</addon>' /usr/share/kodi/system/addon-manifest.xml
 sed -i -e 's/lookandfeel.skin" default="true">skin.estuary/lookandfeel.skin">skin.rnsd/' /home/pi/.kodi/userdata/guisettings.xml
-unzip /tmp/repository.maltsev_kod*.zip -d /home/pi/.kodi/addons/ > /dev/null 2>&1
+
 
 
 echo "---------------------------------------------------------"
