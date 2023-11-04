@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#wget -P /tmp https://raw.githubusercontent.com/maltsevvv/rnspi-install/main/installnew.sh
+#sudo sh /tmp/installnew.sh
 check_samba=samba
 check_kodi=kodi
 check_can_utils=can-utils
