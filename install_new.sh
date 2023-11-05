@@ -16,12 +16,12 @@ check_ir=ir-keytable
 ping -c1 -w1 google.de 2>/dev/null 1>/dev/null
 if [ "$?" = 0 ]
 then
-    echo "---------------------------------------------------------"
-    echo "Internet connection present..."
-    echo "---------------------------------------------------------"
+	echo "---------------------------------------------------------"
+	echo "Internet connection present..."
+	echo "---------------------------------------------------------"
 else
 	whiptail --title "Inernet Connection" --msgbox "Inernet Connection is Missing \nPlease make sure a internet connection is available \nand than restart installer!" 10 60
-    exit 0
+	exit 0
 fi
 
 echo "---------------------------------------------------------"
