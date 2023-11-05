@@ -1,8 +1,5 @@
 #!/bin/bash
 
-#wget -P /tmp https://raw.githubusercontent.com/maltsevvv/rnspi-install/main/install_new.sh
-#sudo sh /tmp/install_new.sh
-
 check_samba=samba
 check_kodi=kodi
 check_can_utils=can-utils
@@ -13,30 +10,34 @@ check_mcp2515=mcp2515-can0
 check_pcm5102=hifiberry-dac
 check_ir=ir-keytable
 
+# check for internet connection
 ping -c1 -w1 google.de 2>/dev/null 1>/dev/null
 if [ "$?" = 0 ]
 then
-	echo "---------------------------------------------------------"
-	echo "Internet connection present..."
-	echo "---------------------------------------------------------"
+    echo "---------------------------------------------------------"
+    echo "Internet connection present..."
+    echo "---------------------------------------------------------"
 else
 	whiptail --title "Inernet Connection" --msgbox "Inernet Connection is Missing \nPlease make sure a internet connection is available \nand than restart installer!" 10 60
-	exit 0
+    exit 0
 fi
 
-echo "---------------------------------------------------------"
-echo "Update & Upgrade System"
-echo "---------------------------------------------------------"
-apt update -y
-apt upgrade -y
+sudo apt update -y
 
 echo "---------------------------------------------------------"
 echo "Installing samba"
 echo "---------------------------------------------------------"
-echo "samba-common samba-common/workgroup string  WORKGROUP" | debconf-set-selections
-echo "samba-common samba-common/dhcp boolean true" | debconf-set-selections
-echo "samba-common samba-common/do_debconf boolean true" | debconf-set-selections
-apt install -y samba
+status="$(dpkg-query -W --showformat='${db:Status-Status}' "$check_samba" 2>&1)"
+if [ ! $? = 0 ] || [ ! "$status" = installed ]; then
+	echo "samba-common samba-common/workgroup string  WORKGROUP" | debconf-set-selections
+	echo "samba-common samba-common/dhcp boolean true" | debconf-set-selections
+	echo "samba-common samba-common/do_debconf boolean true" | debconf-set-selections
+	apt install -y samba
+	if [ ! $? = 0 ]; then
+		whiptail --title "SAMBA INSTALLATION ERROR" --msgbox "PLEASE RESTART THE INSTALLER! \nsudo sh install.sh" 10 60
+		exit 0
+	fi
+fi
 if ! grep -q "/home/pi/" /etc/samba/smb.conf; then
 	cat <<'EOF' >> /etc/samba/smb.conf
 [rns]
@@ -54,8 +55,16 @@ fi
 echo "---------------------------------------------------------"
 echo "Installing kodi"
 echo "---------------------------------------------------------"
-apt install -y kodi
-apt install kodi-pvr-iptvsimple
+status="$(dpkg-query -W --showformat='${db:Status-Status}' "$check_kodi" 2>&1)"
+if [ ! $? = 0 ] || [ ! "$status" = installed ]; then
+	apt install -y kodi
+	apt install -y kodi-pvr-iptvsimple
+	if [ ! $? = 0 ]; then
+		whiptail --title "KODI INSTALLATION ERROR" --msgbox "PLEASE RESTART THE INSTALLER! \nsudo sh install.sh" 10 60
+		exit 0
+	fi
+	sed -i '/service.xbmc.versioncheck/d' /usr/share/kodi/system/addon-manifest.xml #Disable versioncheck
+fi
 if ! grep -q "/usr/bin/kodi-standalone" /etc/systemd/system/kodi.service; then
 	cat <<'EOF' > /etc/systemd/system/kodi.service
 [Unit]
@@ -73,12 +82,18 @@ EOF
 	systemctl enable kodi.service
 	systemctl start kodi.service
 fi
-
-
+####
 echo "---------------------------------------------------------"
 echo "Installing can-utils"
 echo "---------------------------------------------------------"
-apt install -y can-utils
+status="$(dpkg-query -W --showformat='${db:Status-Status}' "$check_can_utils" 2>&1)"
+if [ ! $? = 0 ] || [ ! "$status" = installed ]; then
+	apt install -y can-utils
+	if [ ! $? = 0 ]; then
+		whiptail --title "CAN-UTILS INSTALLATION ERROR" --msgbox "PLEASE RESTART THE INSTALLER! \nsudo sh install.sh" 10 60
+		exit 0
+	fi
+fi
 if ! grep -q "auto can0" /etc/network/interfaces; then
 	cat <<'EOF' >> /etc/network/interfaces
 auto can0
@@ -88,51 +103,89 @@ auto can0
   down /sbin/ifconfig can0 down
 EOF
 fi
-
+####
 echo "---------------------------------------------------------"
 echo "Installing Python-pip"
 echo "---------------------------------------------------------"
-if grep -q 'VERSION="10 (buster)"' /etc/os-release; then
-	apt install -y python-pip
-elif grep -q 'VERSION="11 (bullseye)"' /etc/os-release; then
-	apt install -y python3-pip
+status="$(dpkg-query -W --showformat='${db:Status-Status}' "$check_python_pip" 2>&1)"
+if [ ! $? = 0 ] || [ ! "$status" = installed ]; then
+	if grep -q 'VERSION="10 (buster)"' /etc/os-release; then
+		apt install -y python-pip
+		if [ ! $? = 0 ]; then
+			whiptail --title "PYTHON-PIP INSTALLATION ERROR" --msgbox "PLEASE RESTART THE INSTALLER! \nsudo sh install.sh" 10 60
+			exit 0
+		fi
+	elif grep -q 'VERSION="11 (bullseye)"' /etc/os-release; then
+		apt install -y python3-pip
+		if [ ! $? = 0 ]; then
+			whiptail --title "PYTHON3-PIP INSTALLATION ERROR" --msgbox "PLEASE RESTART THE INSTALLER! \nsudo sh install.sh" 10 60
+			exit 0
+		fi
+	fi
 fi
-
+####
 echo "---------------------------------------------------------"
 echo "Installing Python-can"
 echo "---------------------------------------------------------"
-pip install python-can
-
-echo "---------------------------------------------------------"
-echo "Installing usbmount"
-echo "---------------------------------------------------------"
-if grep -q 'VERSION="10 (buster)"' /etc/os-release; then
-	apt install -y usbmount
-	mkdir /home/pi/tmpu && cd /home/pi/tmpu
-	wget https://github.com/nicokaiser/usbmount/releases/download/0.0.24/usbmount_0.0.24_all.deb
-	dpkg -i usbmount_0.0.24_all.deb
-	cd /home/pi && rm -Rf /home/pi/tmpu
-	#echo "Add Cirilic and UTF-8"
-	sed -i 's/FS_MOUNTOPTIONS=""/FS_MOUNTOPTIONS="-fstype=vfat,iocharset=utf8,gid=1000,dmask=0007,fmask=0007"/' /etc/usbmount/usbmount.conf
-	sed -i 's/FILESYSTEMS="vfat ext2 ext3 ext4 hfsplus"/FILESYSTEMS="vfat ext2 ext3 ext4 hfsplus ntfs fuseblk"/' /etc/usbmount/usbmount.conf
+pip freeze > requirements.txt
+if ! grep -q $check_python_can requirements.txt ; then
+	pip install python-can
+	rm /home/pi/requirements.txt
+	pip freeze > requirements.txt
+	if ! grep -q $check_python_can requirements.txt ; then
+		whiptail --title "PYTHON-CAN INSTALLATION ERROR" --msgbox "PLEASE RESTART THE INSTALLER! \nsudo sh install.sh" 10 60
+		exit 0
+	fi
 fi
-
-echo "---------------------------------------------------------"
-echo "Installing BLUETOOTHE RECIEVER"
-echo "---------------------------------------------------------"
+####
+if grep -q 'VERSION="10 (buster)"' /etc/os-release; then
+	echo "---------------------------------------------------------"
+	echo "Installing usbmount"
+	echo "---------------------------------------------------------"
+	status="$(dpkg-query -W --showformat='${db:Status-Status}' "$check_usbmount" 2>&1)"
+	if [ ! $? = 0 ] || [ ! "$status" = installed ]; then
+		apt install -y usbmount
+		if [ $? = 0 ]; then
+			mkdir /home/pi/tmpu && cd /home/pi/tmpu
+			wget https://github.com/nicokaiser/usbmount/releases/download/0.0.24/usbmount_0.0.24_all.deb
+			if [ $? = 0 ]; then
+				dpkg -i usbmount_0.0.24_all.deb
+				cd /home/pi && rm -Rf /home/pi/tmpu
+			fi
+			#echo "Add Cirilic and UTF-8"
+			sed -i 's/FS_MOUNTOPTIONS=""/FS_MOUNTOPTIONS="-fstype=vfat,iocharset=utf8,gid=1000,dmask=0007,fmask=0007"/' /etc/usbmount/usbmount.conf
+			sed -i 's/FILESYSTEMS="vfat ext2 ext3 ext4 hfsplus"/FILESYSTEMS="vfat ext2 ext3 ext4 hfsplus ntfs fuseblk"/' /etc/usbmount/usbmount.conf
+		fi
+		if [ ! $? = 0 ]; then
+			whiptail --title "USBMOUNT INSTALLATION ERROR" --msgbox "PLEASE RESTART THE INSTALLER! \nsudo sh install.sh" 10 60
+			exit 0
+		fi
+	fi
+fi
+####
+##############################################
+#         INSTALL BLUETOOTHE RECIEVER        #
+##############################################
 if (whiptail --title "Bluetooth audio receiver installer" --yesno "Install Bluetooth Audio Receive." 10 60) then
-	apt install -y pi-bluetooth
+	echo "---------------------------------------------------------"
+	echo "Installing BLUETOOTHE RECIEVER"
+	echo "---------------------------------------------------------"
 	hostnamectl set-hostname --pretty "rns"
 	apt install -y --no-install-recommends pulseaudio
-
+	if [ ! $? -eq 0 ]; then
+		whiptail --title "PULSEAUDIO INSTALLATION ERROR" --msgbox "PLEASE RESTART THE INSTALLER! \nsudo sh install.sh" 10 60
+		exit 0
+	fi
 	usermod -a -G pulse-access root
 	usermod -a -G bluetooth pulse
-	mv /etc/pulse/client.conf /etc/pulse/client.conf.orig
-	cat <<'EOF' >> /etc/pulse/client.conf
+	if ! grep -q '/run/pulse/native' /etc/pulse/client.conf; then
+		mv /etc/pulse/client.conf /etc/pulse/client.conf.orig
+		cat <<'EOF' >> /etc/pulse/client.conf
 default-server = /run/pulse/native
 autospawn = no
-
-sed -i '/^load-module module-native-protocol-unix$/s/$/ auth-cookie-enabled=0 auth-anonymous=1/' /etc/pulse/system.pa
+EOF
+	fi
+	sed -i '/^load-module module-native-protocol-unix$/s/$/ auth-cookie-enabled=0 auth-anonymous=1/' /etc/pulse/system.pa
 	cat <<'EOF' > /etc/systemd/system/pulseaudio.service
 [Unit]
 Description=Sound Service
@@ -147,6 +200,10 @@ EOF
 	systemctl enable --now pulseaudio.service
 	systemctl --global mask pulseaudio.socket
 	apt install -y --no-install-recommends bluez-tools pulseaudio-module-bluetooth
+	if [ ! $? -eq 0 ]; then
+		whiptail --title "BLUETOOTH BLUEZ-TOOLS INSTALLATION ERROR" --msgbox "PLEASE RESTART THE INSTALLER! \nsudo sh install.sh" 10 60
+		exit 0
+	fi
 	echo "---------------------------------------------------------"
 	echo "BLUETOOTHE SETTINGS"
 	echo "---------------------------------------------------------"
@@ -163,6 +220,7 @@ EOF
 [Service]
 Type=oneshot
 EOF
+
 	cat <<'EOF' > /etc/systemd/system/bt-agent@.service
 [Unit]
 Description=Bluetooth Agent
@@ -181,13 +239,15 @@ KillSignal=SIGUSR1
 [Install]
 WantedBy=multi-user.target
 EOF
-
 	systemctl daemon-reload
 	systemctl enable bt-agent@hci0.service
 	usermod -a -G bluetooth pulse
-	echo "load-module module-bluetooth-policy" >> /etc/pulse/system.pa
-	echo "load-module module-bluetooth-discover" >> /etc/pulse/system.pa
-	cat <<'EOF' > /usr/local/bin/bluetooth-udev
+	if ! grep -q 'module-bluetooth-discover' /etc/pulse/system.pa; then
+		echo "load-module module-bluetooth-policy" >> /etc/pulse/system.pa
+		echo "load-module module-bluetooth-discover" >> /etc/pulse/system.pa
+	fi
+	if ! grep -q 'bluetoothctl discoverable on' /usr/local/bin/bluetooth-udev; then
+		cat <<'EOF' > /usr/local/bin/bluetooth-udev
 #!/bin/bash
 if [[ ! $NAME =~ ^\"([0-9A-F]{2}[:-]){5}([0-9A-F]{2})\"$ ]]; then exit 0; fi
 
@@ -195,9 +255,13 @@ action=$(expr "$ACTION" : "\([a-zA-Z]\+\).*")
 
 if [ "$action" = "add" ]; then
     bluetoothctl discoverable off
+    # disconnect wifi to prevent dropouts
+    #ifconfig wlan0 down &
 fi
 
 if [ "$action" = "remove" ]; then
+    # reenable wifi
+    #ifconfig wlan0 up &
     bluetoothctl discoverable on
 fi
 EOF
@@ -206,18 +270,46 @@ EOF
 SUBSYSTEM=="input", GROUP="input", MODE="0660"
 KERNEL=="input[0-9]*", RUN+="/usr/local/bin/bluetooth-udev"
 EOF
+	fi
 	echo "---------------------------------------------------------"
 	echo "EDIT /etc/asound.conf"
 	echo "---------------------------------------------------------"
-	cat <<'EOF' > /etc/asound.conf
+	if ! grep -q 'defaults.ctl.card 0' /etc/asound.conf; then
+		cat <<'EOF' > /etc/asound.conf
 defaults.ctl.card 0
 defaults.ctl.card 0
 EOF
+	fi
+else
+	echo "---------------------------------------------------------"
+	echo "YOU CANCELED THE INSTALLATION BLUETOOTH RECIEVER"
+	echo "---------------------------------------------------------"
 fi
-
-echo "---------------------------------------------------------"
-echo "INSTALL SKIN"
-echo "---------------------------------------------------------"
+##############################################
+####
+if (systemctl -q is-active kodi.service); then
+	systemctl stop kodi.service
+	sleep 10
+elif (systemctl -q is-active kodi.service); then
+	systemctl stop kodi.service
+	sleep 10
+exit 1
+fi
+####
+##############################################
+#        INSTALL Bluetooth Manager           #
+##############################################
+if grep -q 'VERSION="11 (bullseye)"' /etc/os-release; then
+	if grep -q 'defaults.ctl.card 0' /etc/asound.conf; then
+		rm -r /home/pi/.kodi/addons/*bluetooth*
+		unzip /home/pi/.kodi/addons/skin.rns*/resources/Bluetooth*.zip -d /home/pi/.kodi/addons/ > /dev/null 2>&1
+		sed -i -e '$i \  <addon optional="true">script.bluetooth.man</addon>' /usr/share/kodi/system/addon-manifest.xml
+	fi
+fi
+####
+##############################################
+#             INSTALL SKIN RNSD              #
+##############################################
 if grep -q 'VERSION="10 (buster)"' /etc/os-release; then
 	wget -P /tmp https://github.com/maltsevvv/maltsev-Kodi-Repo/raw/master/kodi18/skin.rnsd/skin.rnsd-18.1.1.zip
 	wget -P /tmp https://github.com/maltsevvv/maltsev-Kodi-Repo/raw/master/repository.maltsev_kodi18/repository.maltsev_kodi18-1.0.0.zip
@@ -237,6 +329,55 @@ sed -i -e '$i \  <addon optional="true">skin.rnsd</addon>' /usr/share/kodi/syste
 sed -i -e 's/lookandfeel.skin" default="true">skin.estuary/lookandfeel.skin">skin.rnsd/' /home/pi/.kodi/userdata/guisettings.xml
 
 
+
+
+# if [ -e /boot/skin.rnsd*.zip ]; then
+	# rm -r /home/pi/.kodi/addons/skin.rns*
+	# unzip /boot/skin.rnsd*.zip -d /home/pi/.kodi/addons/ > /dev/null 2>&1
+	# sed -i -e '$i \  <addon optional="true">skin.rnsd</addon>' /usr/share/kodi/system/addon-manifest.xml
+	# sed -i -e 's/lookandfeel.skin" default="true">skin.estuary/lookandfeel.skin">skin.rnsd/' /home/pi/.kodi/userdata/guisettings.xml
+	# sed -i -e 's/skin.rnse/skin.rnsd/' /home/pi/.kodi/userdata/guisettings.xml
+	# if grep -q 'VERSION="10 (buster)"' /etc/os-release; then
+		# if [ -e /boot/skin.rns*buster.zip ]; then
+			# cp /home/pi/.kodi/addons/skin.rnsd/tvtuner.pyo /usr/local/bin/
+		# fi
+	# elif grep -q 'VERSION="11 (bullseye)"' /etc/os-release; then
+		# if [ -e /boot/skin.rns*bullseye.zip ]; then
+			# cp /home/pi/.kodi/addons/skin.rnsd/tvtuner.pyc /usr/local/bin/
+		# fi
+	# fi
+	# if ! grep -q 'Emulation tv-tuner 4DO919146B' /etc/systemd/system/tvtuner.service; then
+		 # cat <<'EOF' > /etc/systemd/system/tvtuner.service
+# [Unit]
+# Description=Emulation tv-tuner 4DO919146B
+# [Service]
+# Type=simple
+# ExecStart=/usr/bin/python /usr/local/bin/tvtuner.pyo
+# Restart=always
+# [Install]
+# WantedBy=multi-user.target
+# EOF
+	# fi
+	# if grep -q 'VERSION="10 (buster)"' /etc/os-release; then
+		# sed -i -e 's/usr/local/bin/tvtuner.pyc/usr/local/bin/tvtuner.pyo' /etc/systemd/system/tvtuner.service
+	# elif grep -q 'VERSION="11 (bullseye)"' /etc/os-release; then
+		# sed -i -e 's/usr/local/bin/tvtuner.pyo/usr/local/bin/tvtuner.pyc' /etc/systemd/system/tvtuner.service
+	# fi
+	# systemctl enable tvtuner.service
+
+# ##############################################
+# #             INSTALL SKIN RNSE              #
+# ##############################################
+# elif [ -e /boot/skin.rnse*.zip ]; then
+	# rm -r /home/pi/.kodi/addons/skin.rns*
+	# unzip /boot/skin.rnse*.zip -d /home/pi/.kodi/addons/ > /dev/null 2>&1
+	# sed -i -e '$i \  <addon optional="true">skin.rnse</addon>' /usr/share/kodi/system/addon-manifest.xml
+	# sed -i -e 's/lookandfeel.skin" default="true">skin.estuary/lookandfeel.skin">skin.rnse/' /home/pi/.kodi/userdata/guisettings.xml
+	# sed -i -e 's/skin.rnsd/skin.rnse/' /home/pi/.kodi/userdata/guisettings.xml
+# else
+	# whiptail --title "ERROR SKIN RNS-D or RNS-E" --msgbox "NOT found skin on SD card in /boot/ \nskin.rnsd-*.zip or skin.rnse-*.zip" 10 60
+# fi
+####
 echo "---------------------------------------------------------"
 echo "CREATING MEDIA FOLDER"
 echo "---------------------------------------------------------"
