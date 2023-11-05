@@ -357,6 +357,7 @@ else
 	whiptail --title "ERROR SKIN RNS-D or RNS-E" --msgbox "NOT found skin on SD card in /boot/ \nskin.rnsd-*.zip or skin.rnse-*.zip" 10 60
 fi
 ####
+chown -R pi:pi /home/pi/.kodi/addons/
 echo "---------------------------------------------------------"
 echo "CREATING MEDIA FOLDER"
 echo "---------------------------------------------------------"
