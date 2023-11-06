@@ -140,7 +140,6 @@ if (whiptail --title "Bluetooth audio receiver installer" --yesno "Install Bluet
   echo "---------------------------------------------------------"
   echo "Installing BLUETOOTHE RECIEVER"
   echo "---------------------------------------------------------"
-  apt install -y pi-bluetooth
   hostnamectl set-hostname --pretty "rns"
   apt install -y --no-install-recommends pulseaudio
   if [ ! $? -eq 0 ]; then
