@@ -343,6 +343,8 @@ hci1:   Type: Primary  Bus: USB
 * Обновляем *
 
 ```
+sudo systemctl disable hciuart
+sudo modprobe btusb
 sudo rpi-update
 ```
 
