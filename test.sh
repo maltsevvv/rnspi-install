@@ -247,11 +247,11 @@ defaults.ctl.card 0
 defaults.ctl.card 0
 EOF
   fi
-  if (whiptail --title "USB Bluetooth Adapter" --yesno "Are you using an external usb bluetooth?." 10 60) then
-    systemctl disable hciuart
-    modprobe btusb
-    rpi-update
-  fi
+#  if (whiptail --title "USB Bluetooth Adapter" --yesno "Are you using an external usb bluetooth?." 10 60) then
+#    systemctl disable hciuart
+#    modprobe btusb
+#    rpi-update
+#  fi
 else
   echo "---------------------------------------------------------"
   echo "YOU CANCELED THE INSTALLATION BLUETOOTH RECIEVER"
