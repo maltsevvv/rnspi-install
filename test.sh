@@ -247,6 +247,11 @@ defaults.ctl.card 0
 defaults.ctl.card 0
 EOF
   fi
+  if (whiptail --title "USB Bluetooth Adapter" --yesno "Are you using an external usb bluetooth?." 10 60) then
+    systemctl disable hciuart
+    modprobe btusb
+    rpi-update
+  fi
 else
   echo "---------------------------------------------------------"
   echo "YOU CANCELED THE INSTALLATION BLUETOOTH RECIEVER"
@@ -280,13 +285,11 @@ fi
 if grep -q 'VERSION="10 (buster)"' /etc/os-release; then
   wget -P /tmp https://github.com/maltsevvv/maltsev-Kodi-Repo/raw/master/kodi18/skin.rnsd/skin.rnsd-18.1.1.zip
   wget -P /tmp https://github.com/maltsevvv/maltsev-Kodi-Repo/raw/master/repository.maltsev_kodi18/repository.maltsev_kodi18-1.0.0.zip
-  #chown -R pi:pi /home/pi/.kodi/addons/repository.maltsev_kod18
-  sed -i -e '$i \  <addon>repository.maltsev_kodi18</addon>' /usr/share/kodi/system/addon-manifest.xml
+  #sed -i -e '$i \  <addon>repository.maltsev_kodi18</addon>' /usr/share/kodi/system/addon-manifest.xml
 elif grep -q 'VERSION="11 (bullseye)"' /etc/os-release; then
   wget -P /tmp https://github.com/maltsevvv/maltsev-Kodi-Repo/raw/master/kodi19/skin.rnsd/skin.rnsd-19.1.1.zip
   wget -P /tmp https://github.com/maltsevvv/maltsev-Kodi-Repo/raw/master/repository.maltsev_kodi19/repository.maltsev_kodi19-1.0.0.zip
-  #chown -R pi:pi /home/pi/.kodi/addons/repository.maltsev_kod19
-  sed -i -e '$i \  <addon>repository.maltsev_kodi19</addon>' /usr/share/kodi/system/addon-manifest.xml
+  #sed -i -e '$i \  <addon>repository.maltsev_kodi19</addon>' /usr/share/kodi/system/addon-manifest.xml
 fi
 rm -r /home/pi/.kodi/addons/skin.rns*
 unzip /tmp/skin.rnsd*.zip -d /home/pi/.kodi/addons/ > /dev/null 2>&1
@@ -295,53 +298,6 @@ chown -R pi:pi /home/pi/.kodi/addons/
 sed -i -e '$i \  <addon optional="true">skin.rnsd</addon>' /usr/share/kodi/system/addon-manifest.xml
 sed -i -e 's/lookandfeel.skin" default="true">skin.estuary/lookandfeel.skin">skin.rnsd/' /home/pi/.kodi/userdata/guisettings.xml
 
-
-# if [ -e /boot/skin.rnsd*.zip ]; then
-	# rm -r /home/pi/.kodi/addons/skin.rns*
-	# unzip /boot/skin.rnsd*.zip -d /home/pi/.kodi/addons/ > /dev/null 2>&1
-	# sed -i -e '$i \  <addon optional="true">skin.rnsd</addon>' /usr/share/kodi/system/addon-manifest.xml
-	# sed -i -e 's/lookandfeel.skin" default="true">skin.estuary/lookandfeel.skin">skin.rnsd/' /home/pi/.kodi/userdata/guisettings.xml
-	# sed -i -e 's/skin.rnse/skin.rnsd/' /home/pi/.kodi/userdata/guisettings.xml
-	# if grep -q 'VERSION="10 (buster)"' /etc/os-release; then
-		# if [ -e /boot/skin.rns*buster.zip ]; then
-			# cp /home/pi/.kodi/addons/skin.rnsd/tvtuner.pyo /usr/local/bin/
-		# fi
-	# elif grep -q 'VERSION="11 (bullseye)"' /etc/os-release; then
-		# if [ -e /boot/skin.rns*bullseye.zip ]; then
-			# cp /home/pi/.kodi/addons/skin.rnsd/tvtuner.pyc /usr/local/bin/
-		# fi
-	# fi
-	# if ! grep -q 'Emulation tv-tuner 4DO919146B' /etc/systemd/system/tvtuner.service; then
-		 # cat <<'EOF' > /etc/systemd/system/tvtuner.service
-# [Unit]
-# Description=Emulation tv-tuner 4DO919146B
-# [Service]
-# Type=simple
-# ExecStart=/usr/bin/python /usr/local/bin/tvtuner.pyo
-# Restart=always
-# [Install]
-# WantedBy=multi-user.target
-# EOF
-	# fi
-	# if grep -q 'VERSION="10 (buster)"' /etc/os-release; then
-		# sed -i -e 's/usr/local/bin/tvtuner.pyc/usr/local/bin/tvtuner.pyo' /etc/systemd/system/tvtuner.service
-	# elif grep -q 'VERSION="11 (bullseye)"' /etc/os-release; then
-		# sed -i -e 's/usr/local/bin/tvtuner.pyo/usr/local/bin/tvtuner.pyc' /etc/systemd/system/tvtuner.service
-	# fi
-	# systemctl enable tvtuner.service
-
-# ##############################################
-# #             INSTALL SKIN RNSE              #
-# ##############################################
-# elif [ -e /boot/skin.rnse*.zip ]; then
-	# rm -r /home/pi/.kodi/addons/skin.rns*
-	# unzip /boot/skin.rnse*.zip -d /home/pi/.kodi/addons/ > /dev/null 2>&1
-	# sed -i -e '$i \  <addon optional="true">skin.rnse</addon>' /usr/share/kodi/system/addon-manifest.xml
-	# sed -i -e 's/lookandfeel.skin" default="true">skin.estuary/lookandfeel.skin">skin.rnse/' /home/pi/.kodi/userdata/guisettings.xml
-	# sed -i -e 's/skin.rnsd/skin.rnse/' /home/pi/.kodi/userdata/guisettings.xml
-# else
-	# whiptail --title "ERROR SKIN RNS-D or RNS-E" --msgbox "NOT found skin on SD card in /boot/ \nskin.rnsd-*.zip or skin.rnse-*.zip" 10 60
-# fi
 ####
 echo "---------------------------------------------------------"
 echo "CREATING MEDIA FOLDER"
