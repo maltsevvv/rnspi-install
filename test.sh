@@ -13,7 +13,7 @@ fi
 
 apt update -y
 
-apt upgrade -y
+#apt upgrade -y
 
 echo "---------------------------------------------------------"
 echo "Installing samba"
