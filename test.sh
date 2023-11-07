@@ -282,11 +282,11 @@ fi
 #               INSTALL SKIN                 #
 ##############################################
 if grep -q 'VERSION="10 (buster)"' /etc/os-release; then
-  wget -P /tmp https://github.com/maltsevvv/maltsev-Kodi-Repo/raw/master/kodi18/skin.rnsd/skin.rnsd-18.1.1.zip
+  wget -P /tmp https://github.com/maltsevvv/maltsev-Kodi-Repo/raw/master/kodi18/skin.rnsd/skin.rnsd-18.1.0.zip
   wget -P /tmp https://github.com/maltsevvv/maltsev-Kodi-Repo/raw/master/repository.maltsev_kodi18/repository.maltsev_kodi18-1.0.0.zip
   #sed -i -e '$i \  <addon>repository.maltsev_kodi18</addon>' /usr/share/kodi/system/addon-manifest.xml
 elif grep -q 'VERSION="11 (bullseye)"' /etc/os-release; then
-  wget -P /tmp https://github.com/maltsevvv/maltsev-Kodi-Repo/raw/master/kodi19/skin.rnsd/skin.rnsd-19.1.1.zip
+  wget -P /tmp https://github.com/maltsevvv/maltsev-Kodi-Repo/raw/master/kodi19/skin.rnsd/skin.rnsd-19.1.0.zip
   wget -P /tmp https://github.com/maltsevvv/maltsev-Kodi-Repo/raw/master/repository.maltsev_kodi19/repository.maltsev_kodi19-1.0.0.zip
   #sed -i -e '$i \  <addon>repository.maltsev_kodi19</addon>' /usr/share/kodi/system/addon-manifest.xml
 fi
