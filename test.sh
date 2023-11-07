@@ -404,7 +404,6 @@ EOF
   #OS BULLSEYE
   if grep -q 'VERSION="11 (bullseye)"' /etc/os-release; then
     cat <<'EOF' >> /boot/config.txt
-
 ## For VERSION="11 (bullseye)
 dtoverlay=vc4-fkms-v3d
 EOF
