@@ -387,7 +387,7 @@ if (whiptail --title "Video Output" --yesno "Use HDMI-VGA Adapter For Video Outp
   cat <<'EOF' > /boot/config.txt
 
 ## CEC Remote Control
-#hdmi_ignore_cec=1
+hdmi_ignore_cec=1
 
 ## HDMI to VGA adapter for RNS
 disable_overscan=1
@@ -398,8 +398,6 @@ hdmi_mode=87
 hdmi_timings 800 0 51 44 121 460 0 10 9 14 0 0 0 32 1 16000000 3
 framebuffer_width=400
 framebuffer_height=230
-
-
 EOF
   #OS BULLSEYE
   if grep -q 'VERSION="11 (bullseye)"' /etc/os-release; then
@@ -414,8 +412,8 @@ else
   echo "---------------------------------------------------------"
   cat <<'EOF' > /boot/config.txt
 
-## CEC Remote Control
-hdmi_ignore_cec=1
+# CEC Remote Control
+#hdmi_ignore_cec=1
 
 # sdtv_mode defines the TV standard for composite output.
 # sdtv_mode=0 NTSC, sdtv_mode=1 NTSC Japanese, sdtv_mode=2 PAL
@@ -461,8 +459,6 @@ dtoverlay=mcp2515-can0,oscillator=8000000,interrupt=25
 dtoverlay=spi-bcm2835-overlay
 EOF
 
-#
-
 if (whiptail --title "IR Remote Control" --yesno "Enable IR-Receiver? \nfor Control Kodi, via RNS-JP3 \nWARNING!!!! ONLY FOR RNS-JP3 (Asian)" 10 60); then
   echo "---------------------------------------------------------"
   echo "Installing ir-keytable"
@@ -500,7 +496,7 @@ EOF
 *       rc-rc6-mce               nec_rnsjp3.toml
 EOF
 fi
-####
+
 if (whiptail --title "Installation Completed" --yesno "Reboot System Now" 10 60) then
   cp /boot/canserial.txt /home/pi/.canserial.txt
   cp /boot/.canserial.txt /home/pi/.canserial.txt
